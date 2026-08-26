@@ -1,0 +1,30 @@
+generated: '2026-08-26'
+method: probed
+source: https://www.scalecomputing.com/security
+trust_center:
+  published: false
+  url: null
+  note: >-
+    No trust center found. trust.scalecomputing.com does not serve a page (Cloudflare edge answers the
+    hostname with a challenge to a raw client and returns HTTP 404 to a browser-agent fetch), and
+    www.scalecomputing.com/security is a product-marketing page, not a compliance portal.
+certifications: []
+x-false-positive-correction:
+  detected_by: 0-working/probe-security-programs.py
+  detected: [SOC 2, PCI DSS]
+  verdict: rejected
+  reason: >-
+    The keyword probe matched "SOC 2" and "PCI DSS" on https://www.scalecomputing.com/security, but on
+    reading the page those strings appear in offerings Scale Computing sells TO customers ("PCI DSS
+    Compliance Solutions for Secure, Scalable Payment Environments", a free PCI assessment tool, and a
+    white paper titled "Enabling Regulatory Compliance with Your IT Infrastructure Platform"). The page
+    makes no claim that Scale Computing itself holds a SOC 2 attestation or a PCI DSS certification, and
+    no such claim was found elsewhere on the site. Recorded as absent rather than credited.
+  checked: '2026-08-26'
+evidence:
+- url: https://www.scalecomputing.com/security
+  status: 200
+  finding: marketing page; compliance offerings for customers, no self-attestation
+- url: https://trust.scalecomputing.com
+  status: 404
+  finding: no trust center served (403 Cloudflare challenge to curl, 404 to a browser-agent fetch)

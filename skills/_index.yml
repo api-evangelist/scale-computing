@@ -1,0 +1,37 @@
+generated: '2026-08-26'
+method: generated
+source: openapi/scale-computing-fleet-manager-openapi.json
+api: SC//Fleet Manager API
+note: >-
+  All four skills are grounded in operationIds verified against the published SC//Fleet Manager
+  OpenAPI 3.0 document harvested from https://api.scalecomputing.com/api/v2/openapi.json on
+  2026-08-26. No skill was written for the v1 core API: it is undocumented, carries no operation
+  summaries or descriptions, and exposes destructive operations with no published semantics, so there
+  is nothing to ground safe instructions in. No skill was written for the SC//HyperCore on-appliance
+  API: it publishes no machine-readable contract outside the customer's own network.
+skills:
+- name: scale-computing-fleet-health-triage
+  file: scale-computing-fleet-health-triage.md
+  description: Survey fleet health and triage open cluster conditions. Read-only.
+  operations: [ClustersController_findAll, ClustersController_findOne, ClusterConditionsController_findAll,
+               ClusterConditionsController_findOne, VmController_findAll]
+- name: scale-computing-cluster-tagging
+  file: scale-computing-cluster-tagging.md
+  description: Read and rewrite cluster tags safely. The write is an overwrite; capture prior state first.
+  operations: [ClustersController_findOne, ClustersController_findAll, ClustersController_upsertClusterTags]
+- name: scale-computing-api-key-lifecycle
+  file: scale-computing-api-key-lifecycle.md
+  description: Create, inventory and revoke Fleet Manager API keys. Contains the API's one irreversible operation.
+  operations: [ApiKeyController_findAll, ApiKeyController_create, ApiKeyController_remove]
+- name: scale-computing-fleet-metrics
+  file: scale-computing-fleet-metrics.md
+  description: Query historical CPU/RAM/storage time-series and export cluster and VM inventories as CSV.
+  operations: [MetricsController_findAll, ClustersController_downloadCsv, VmController_downloadCsv,
+               ClustersController_findAll, VmController_findAll]
+coverage:
+  v2_operations_total: 15
+  v2_operations_covered: 14
+  uncovered: [HealthController_check]
+  uncovered_reason: >-
+    GET /health is declared in the spec but returns HTTP 404 at the declared server
+    (https://api.scalecomputing.com/health, probed 2026-08-26), so no skill instructs an agent to call it.

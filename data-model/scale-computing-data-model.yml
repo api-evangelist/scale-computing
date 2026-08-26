@@ -1,0 +1,140 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/scale-computing-fleet-manager-openapi.json components.schemas,
+  openapi/scale-computing-core-openapi.json components.schemas
+entities:
+- name: Organization
+  api: core-v1
+  schema: Organization
+  identifier: organizationId
+  note: Tenant root. Owns clusters, nodes, users, roles and API keys.
+- name: Cluster
+  api: fleet-manager-v2 + core-v1
+  schema: ClusterDto (v2) / Cluster (v1)
+  identifier: id
+  fields: [id, name, organizationId, nodeCount, version, storagePercent, memoryPercent, cpuPercent,
+           healthScore, healthState, vmRunning, vmTotal, tags, lastCheckin, leaderNodeLanIp,
+           leaderNode, onlineStatus, updatesAvailable, updatesAvailableOptions, updatesStatus]
+  note: The one entity described by BOTH published specs, under two different schema shapes.
+- name: Node
+  api: core-v1
+  schema: INode / NodeData
+  identifier: nodeId
+  note: A physical HyperCore appliance node. Carries collector payloads (hardware, ping, secret key, zero-touch status).
+- name: VirtualMachine
+  api: fleet-manager-v2
+  schema: VmDto
+  identifier: id
+  fields: [id, name, clusterId, cluster, nodeIp, nodeId, description, state, ips, tags, driveCapacity,
+           driveAllocation, drivePercent, memory, cores, snapSize]
+- name: ClusterCondition
+  api: fleet-manager-v2
+  schema: ClusterConditionDto
+  identifier: id
+  fields: [id, identifier, cluster, name, description, value, severity, severityLevel, setDate, nodeLANIPs]
+- name: OrganizationActivity
+  api: fleet-manager-v2
+  schema: OrganizationActivityDto
+  identifier: id
+  fields: [id, organizationId, resourceId, category, type, message, createdByName, createdById]
+- name: ApiKey
+  api: fleet-manager-v2
+  schema: ApiKeyDto
+  identifier: id
+  fields: [id, name, organizationId, tokenSuffix, role, lastUsed, cluster]
+- name: MetricSeries
+  api: fleet-manager-v2
+  schema: QueryResponseDto
+  identifier: none
+  fields: [pointData, entity, fields, label, colors]
+  note: Time-series projection keyed by metricType, not a persisted addressable resource.
+- name: User
+  api: core-v1
+  schema: User
+  identifier: userId
+- name: OrganizationRole
+  api: core-v1
+  schema: OrganizationRole
+  identifier: roleId
+- name: StagedCluster
+  api: core-v1
+  schema: StagedClusterCreateParams
+  identifier: id
+  note: Zero-touch provisioning record for a cluster that has not yet come online.
+- name: SalesforceAccount
+  api: core-v1
+  schema: SalesforceAccount
+  identifier: id
+  note: CRM linkage; synced via SyncSalesforceAssets / UpdateOrganizationSalesforceAccount.
+- name: Page
+  api: fleet-manager-v2
+  schema: PageDto / PageMetaDto
+  note: Pagination envelope, not a domain entity.
+- name: ApplicationManifest
+  api: fleet-manager (application lifecycle management)
+  schema: json-schema/scale-computing-fleet-manager-application-manifest.json
+  identifier: metadata.name
+  note: >-
+    Declarative edge-application manifest (type/version/metadata/spec) used by Fleet Manager's
+    application orchestration. Published as JSON Schema draft-07, not exposed in either OpenAPI.
+relationships:
+- from: Organization
+  to: Cluster
+  kind: has_many
+  via: ClusterDto.organizationId
+- from: Organization
+  to: ApiKey
+  kind: has_many
+  via: ApiKeyDto.organizationId
+- from: Organization
+  to: OrganizationActivity
+  kind: has_many
+  via: OrganizationActivityDto.organizationId
+- from: Organization
+  to: User
+  kind: has_many
+  via: /api/v1/organizationUsers
+- from: Organization
+  to: OrganizationRole
+  kind: has_many
+  via: /api/v1/organizationRoles
+- from: Organization
+  to: SalesforceAccount
+  kind: has_one
+  via: UpdateOrganizationSalesforceAccount
+- from: Cluster
+  to: VirtualMachine
+  kind: has_many
+  via: VmDto.clusterId
+- from: Cluster
+  to: ClusterCondition
+  kind: has_many
+  via: ClusterConditionDto.cluster
+- from: Cluster
+  to: Node
+  kind: has_many
+  via: ClusterDto.nodeCount / ClusterDto.leaderNode
+- from: VirtualMachine
+  to: Node
+  kind: belongs_to
+  via: VmDto.nodeId
+- from: StagedCluster
+  to: Cluster
+  kind: becomes
+  via: zero-touch provisioning (CreateStagedCluster -> cluster check-in)
+- from: ApiKey
+  to: OrganizationRole
+  kind: belongs_to
+  via: ApiKeyDto.role
+x-notes:
+- >-
+  ClusterDto carries a self-referential `cluster` field and VmDto/ApiKeyDto/ClusterConditionDto each
+  carry an embedded `cluster` object; the specs do not $ref these back to a shared Cluster schema, so
+  the relationship is by field name rather than by $ref.
+- >-
+  POST /api/v2/clusters/{id}/tags declares a BROKEN request-body reference —
+  "$ref": "#/components/schemas/" with an empty schema name. The only description of the payload is an
+  inline example ({"tags": "foo, bar, baz"}), which also reveals that tags are a comma-delimited
+  STRING, not an array, despite ClusterDto.tags being read back as a field of its own.
+- No id-prefix scheme is published for any entity; ids are opaque.

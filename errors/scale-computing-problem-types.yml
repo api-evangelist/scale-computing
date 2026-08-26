@@ -1,0 +1,72 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/scale-computing-fleet-manager-openapi.json, openapi/scale-computing-core-openapi.json,
+  live unauthenticated probe of https://api.scalecomputing.com/api/v2/clusters
+format: bespoke-json
+envelopes:
+- api: SC//Fleet Manager API
+  schema: BadRequestException
+  media_type: application/json
+  fields:
+    statusCode: integer HTTP status code, echoed in the body
+    message: string human-readable message
+    error: string short error name
+  note: NestJS default exception filter shape. Not RFC 9457 (no type/title/detail/instance, not application/problem+json).
+- api: Scale Computing Platform Core API
+  schema: ApiValidationError / Error
+  media_type: application/json
+  fields:
+    message: string
+    status: number (optional)
+    fields: object of per-field validation detail (ApiValidationError only)
+  note: tsoa default validation/error shape.
+problems:
+- status: 400
+  title: Bad Request
+  schema: BadRequestException
+  applies_to: every operation in the SC//Fleet Manager v2 spec
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ClustersController_findAll
+  note: >-
+    400 is the ONLY error response declared anywhere in the v2 spec. There is no declared 401, 403,
+    404, 409, 422, 429 or 5xx, even though the API is api-key authenticated and role-restricted, so an
+    agent cannot distinguish "bad key", "insufficient role", "not found" or "rate limited" from the
+    contract.
+- status: 422
+  title: Validation Failed
+  schema: ApiValidationError
+  applies_to: operations in the v1 core spec that accept a request body or typed parameters
+  source_operation: openapi/scale-computing-core-openapi.json#CreateNode
+- status: 401
+  title: Unauthorized
+  schema: Error
+  applies_to: authenticated operations in the v1 core spec
+  source_operation: openapi/scale-computing-core-openapi.json#AuthenticateUser
+- status: 404
+  title: Not Found
+  schema: Error
+  applies_to: id-addressed operations in the v1 core spec
+  source_operation: openapi/scale-computing-core-openapi.json#GetCluster
+x-observed:
+- probe: 'GET https://api.scalecomputing.com/api/v2/clusters (no api-key header)'
+  observed_status: 500
+  observed_body: '{"statusCode":500,"message":"Internal server error"}'
+  expected: 401 Unauthorized
+  fetched: '2026-08-26'
+  finding: >-
+    An anonymous call to a documented, api-key-protected collection endpoint returns HTTP 500 rather
+    than 401. This is a real runtime divergence from the contract (which declares only 200 and 400 for
+    this operation) and it is the failure mode an agent hits first: a missing credential is reported as
+    a server fault, which is not retry-classifiable.
+- probe: 'GET https://api.scalecomputing.com/health'
+  observed_status: 404
+  expected: 200
+  fetched: '2026-08-26'
+  finding: >-
+    The v2 spec declares an unauthenticated GET /health operation (HealthController_check) against
+    server https://api.scalecomputing.com, but that exact URL 404s. The spec's only security-free
+    operation is not reachable at the path the spec gives.
+x-gaps:
+- No published error-code registry or error reference page for either API.
+- No RFC 9457 problem+json, no machine-readable `type` URIs, no remediation guidance.
+- No 429 documented, so rate-limit exhaustion has no declared error contract.

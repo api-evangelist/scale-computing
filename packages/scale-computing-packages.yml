@@ -1,0 +1,64 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  github.com/ScaleComputing org listing, Ansible Galaxy API, Terraform Registry API, npm/PyPI registry
+  metadata endpoints
+packages:
+- language: yaml
+  registry: ansible-galaxy
+  name: scale_computing.hypercore
+  url: https://galaxy.ansible.com/ui/repo/published/scale_computing/hypercore/
+  install: ansible-galaxy collection install scale_computing.hypercore
+  official: true
+  version: 1.6.1
+  published: '2025-03-17'
+  repo: https://github.com/ScaleComputing/HyperCoreAnsibleCollection
+  docs: https://scalecomputing.github.io/HyperCoreAnsibleCollection/
+  wraps: SC//HyperCore REST API (/rest/v1)
+  downloads: 4651
+  note: >-
+    Official Ansible collection for the SC//HyperCore v1 API, published by Scale Computing. Latest
+    release 1.6.1 (2025-03-17), i.e. ~17 months without a release as of this pass — the collection is
+    the older of the two IaC surfaces and the Terraform provider is now the actively released one.
+- language: go
+  registry: terraform-registry
+  name: ScaleComputing/hypercore
+  url: https://registry.terraform.io/providers/ScaleComputing/hypercore/latest
+  install: 'terraform { required_providers { hypercore = { source = "ScaleComputing/hypercore" } } }'
+  official: true
+  version: 1.4.0
+  published: '2026-02-09'
+  repo: https://github.com/ScaleComputing/terraform-provider-hypercore
+  wraps: SC//HyperCore REST API (/rest/v1)
+  downloads: 5506
+  note: >-
+    Official Terraform provider for SC//HyperCore, first released 2025-04-26 (v1.0.0) and shipping
+    steadily since; v1.4.0 is the current release.
+- language: python
+  registry: none
+  name: RestAPIExamples
+  url: https://github.com/ScaleComputing/RestAPIExamples
+  install: git clone https://github.com/ScaleComputing/RestAPIExamples
+  official: true
+  version: null
+  published: null
+  note: >-
+    First-party REST API example scripts for SC//HyperCore and SC//Fleet Manager, distributed as a
+    GitHub repository only. version/published are null because there is no package registry and no
+    tagged release to read a version from — the repo README directs users to git tags matched to a
+    Scale Computing release, but no GitHub Releases are published. Checked, nothing to record.
+x-negative-results:
+- registry: npm
+  probed: [scale-computing, '@scalecomputing/sdk', hypercore-client]
+  status: 404
+  finding: no first-party JavaScript SDK published
+- registry: pypi
+  probed: [scale-computing, scalecomputing, hypercore]
+  status: 404 for scale-computing/scalecomputing; 200 for hypercore
+  finding: >-
+    pypi.org/project/hypercore is an unrelated "Peer to Peer B-tree" package (v0.0.1), NOT Scale
+    Computing. No first-party Python SDK is published to PyPI.
+x-findings:
+- Scale Computing ships infrastructure-as-code integrations rather than language SDKs. Both official
+  packages wrap the on-appliance SC//HyperCore API; NEITHER wraps the public cloud SC//Fleet Manager
+  API, which has no first-party client library in any language.

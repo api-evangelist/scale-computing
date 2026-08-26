@@ -1,0 +1,91 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/scale-computing-fleet-manager-openapi.json, openapi/scale-computing-core-openapi.json,
+  json-schema/scale-computing-fleet-manager-application-manifest.json, live probes
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: >-
+    Both published specs declare openapi 3.0.0 — SC//Fleet Manager v2 at
+    https://api.scalecomputing.com/api/v2/openapi.json and the v1 core spec at
+    https://api.scalecomputing.com/swagger.json.
+- id: json-schema-draft-07
+  conforms: true
+  evidence: >-
+    The Fleet Manager Application Manifest declares
+    "$schema": "http://json-schema.org/draft-07/schema#" with $id
+    https://kraken.scalecomputing.com/schemas/application/v1.0.0.json.
+- id: api-key-auth
+  conforms: true
+  evidence: 'components.securitySchemes."API Key" — type apiKey, in header, name api-key (v2 spec).'
+- id: oauth2
+  conforms: false
+  evidence: >-
+    The v1 core spec declares a securityScheme named tsoa_auth with an implicit flow pointing at
+    http://swagger.io/api/oauth/dialog and zero scopes. That is the stock tsoa scaffold placeholder,
+    not a Scale Computing authorization server — treated as NOT conforming rather than credited.
+- id: oidc
+  conforms: false
+  evidence: >-
+    A valid OIDC discovery document is served at
+    https://community.scalecomputing.com/.well-known/openid-configuration, but it is Salesforce
+    Experience Cloud's issuer for the customer community portal and does not authorize either API.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Error responses use a NestJS BadRequestException envelope ({statusCode, message, error}) served as
+    application/json, not application/problem+json. The v1 core spec uses {message, status?, fields?}.
+- id: pagination
+  conforms: true
+  evidence: >-
+    Offset/limit pagination is uniform across every collection endpoint in v2 (offset, limit query
+    params; limit defaults to 20) and responses wrap items in PageDto { meta: PageMetaDto{offset,
+    limit, total}, items }.
+- id: idempotency
+  conforms: false
+  evidence: >-
+    No Idempotency-Key header, no idempotency documentation, and no idempotency parameter in either
+    spec. The two non-idempotent writes (POST /api/v2/api-keys, POST /api/v2/clusters/{id}/tags) offer
+    no replay protection.
+- id: json-api
+  conforms: false
+  evidence: Media type is application/json with bespoke DTO envelopes; no JSON:API document structure.
+- id: odata
+  conforms: false
+  evidence: No $metadata surface and no OData query options; filtering is a single free-text `query` param.
+- id: scim
+  conforms: false
+  evidence: >-
+    User and organization-role management exists in the v1 core spec (/api/v1/organizationUsers,
+    /api/v1/organizationRoles) but uses bespoke paths and payloads, not urn:ietf:params:scim:schemas:*.
+- id: grpc-protobuf
+  conforms: false
+  evidence: No .proto published in the github.com/ScaleComputing org or on buf.build.
+- id: soap-wsdl
+  conforms: false
+  evidence: >-
+    ?wsdl and ?singleWsdl probed on api.scalecomputing.com — the query string is ignored and the
+    JSON OpenAPI/health payload is returned. No SOAP surface.
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    No AsyncAPI document and no webhook/event surface. /api/v2/asyncapi.json returns 404; neither spec
+    declares a `webhooks` object or callbacks.
+x-domain-standard:
+  probed: true
+  found: false
+  note: >-
+    REWARD-ONLY check, honestly empty. The hyperconverged-infrastructure / edge-orchestration market
+    has candidate domain standards a contract could declare — Redfish/Swordfish (DMTF) for platform
+    and storage management, SNIA SMI-S, CIM/WBEM, OVF for VM portability, and the Kubernetes/OCI
+    resource shapes for containerised edge workloads. None appears in either Scale Computing spec:
+    no /redfish/v1 service root, no @odata.type annotations, no OVF envelope, and the Fleet Manager
+    Application Manifest is a bespoke Scale Computing schema (type/version/metadata/spec — Kubernetes-
+    SHAPED, but its own $id and vocabulary, not a CRD or an OCI artifact manifest). Recorded as absent;
+    the provider is not penalised for a market with no adopted contract standard.
+x-compliance:
+  published: false
+  note: >-
+    No self-attested certifications found — see security/scale-computing-trust-center.yml for the
+    rejected SOC 2 / PCI DSS keyword match. No `Compliance` pointer is emitted.

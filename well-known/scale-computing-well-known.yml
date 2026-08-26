@@ -1,0 +1,69 @@
+generated: '2026-08-26'
+method: searched
+source: live GET probes of every Scale Computing host in apis.yml
+hit_count: 1
+hosts:
+- host: https://api.scalecomputing.com
+  note: Express API host; returns a genuine 404 (not a catch-all) for every /.well-known/ path.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://community.scalecomputing.com
+  note: >-
+    Salesforce Experience Cloud community portal on a Scale Computing subdomain. It serves a real
+    OIDC discovery document; every other /.well-known/ path is 401 behind the community login.
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: scale-computing-openid-configuration.json
+  - path: /.well-known/security.txt
+    status: 401
+  - path: /.well-known/oauth-authorization-server
+    status: 401
+  - path: /.well-known/api-catalog
+    status: 401
+  - path: /.well-known/ai-plugin.json
+    status: 401
+  - path: /.well-known/agent-card.json
+    status: 401
+  - path: /.well-known/agent.json
+    status: 401
+- host: https://www.scalecomputing.com
+  note: >-
+    Craft CMS catch-all. EVERY probed path returns HTTP 200 with the identical 87,613-byte
+    "404 | Scale Computing" HTML page, so no 200 on this host is a document.
+  soft_404_control:
+    path: /.well-known/agent-card.json
+    status: 200
+    bytes: 87613
+    body: HTML
+    verdict: soft-404 catch-all — not a document
+  documents: []
+- host: https://fleet.scalecomputing.com
+  note: >-
+    SC//Fleet Manager single-page app. EVERY probed path returns HTTP 200 with the identical
+    1,306-byte SPA index.html, including /robots.txt. No 200 on this host is a document.
+  soft_404_control:
+    path: /robots.txt
+    status: 200
+    bytes: 1306
+    body: HTML
+    verdict: soft-404 catch-all — not a document
+  documents: []
+x-findings:
+- The only real /.well-known/ document across the estate is the Salesforce-issued OIDC discovery
+  config for the customer community portal. It is not an authorization server for either the
+  SC//Fleet Manager API (api-key header) or the SC//HyperCore REST API (basic/session auth).
+- No security.txt, no api-catalog, no ai-plugin.json, no agent card on any host.

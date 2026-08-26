@@ -1,0 +1,34 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  openapi/scale-computing-fleet-manager-openapi.json, https://api.scalecomputing.com/api/v2,
+  live header probes of https://api.scalecomputing.com
+limit_count: 0
+limits: []
+headers:
+  documented: []
+  observed: []
+  note: >-
+    No rate-limit headers of any family were returned. Full observed response header set on
+    api.scalecomputing.com is: x-powered-by, access-control-allow-origin, content-security-policy,
+    x-content-type-options, content-type, content-length, date, strict-transport-security, etag.
+    No X-RateLimit-*, no RateLimit-* (RFC 9239 draft), no Retry-After.
+status_on_exhaustion: undocumented
+note: >-
+  Scale Computing documents no rate limits for the SC//Fleet Manager API. The v2 OpenAPI declares only
+  200/201 and 400 on every operation — there is no 429 response anywhere in either published spec — and
+  the Swagger UI description page covers authorization and role restriction but says nothing about
+  throttling. The only quantitative bound published anywhere in the contract is the pagination `limit`
+  parameter (default 20, with a stated range that is truncated mid-sentence in the spec text:
+  "The value can range between 1-"). An honest zero: limits may well be enforced at the edge, but
+  nothing is published and nothing was observable on unauthenticated calls.
+evidence:
+- url: https://api.scalecomputing.com/health
+  status: 404
+  finding: no rate-limit headers on the response
+- url: https://api.scalecomputing.com/api/v2/clusters
+  status: 500
+  finding: unauthenticated call; no rate-limit headers, and no 401 either
+- url: https://api.scalecomputing.com/api/v2/openapi.json
+  status: 200
+  finding: spec declares no 429 response and no rate-limit header components

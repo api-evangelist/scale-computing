@@ -1,0 +1,149 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/scale-computing-fleet-manager-openapi.json, openapi/scale-computing-core-openapi.json,
+  https://api.scalecomputing.com/api/v2, live header probes
+auth:
+  style: api-key-header
+  header: api-key
+  scheme_name: API Key
+  issued_at: https://fleet.scalecomputing.com/organization/settings
+  scopes: none
+  roles: >-
+    Keys are created with a role (CreateApiKeyDto.role) and every endpoint is role-restricted in
+    alignment with the Fleet Manager UI access levels. The role vocabulary is not enumerated in the
+    spec — the example payload names "VM Viewer" — and the authoritative list lives in the Fleet
+    Manager User Guide, which is hosted on a Salesforce content link.
+  see: authentication/scale-computing-authentication.yml
+pagination:
+  style: offset-limit
+  params:
+    offset: query, number, optional
+    limit: query, number, optional, default 20
+  response_fields:
+    envelope: PageDto
+    meta: PageMetaDto { offset, limit, total }
+    items: array
+  applies_to: [conditions, organization-activities, clusters, vms, api-keys, metrics]
+  note: >-
+    Uniform across every v2 collection endpoint. The limit description is truncated in the published
+    spec ("The value can range between 1-") so the documented maximum is unreadable from the contract.
+filtering:
+  style: single free-text parameter
+  param: query
+  note: >-
+    Every collection accepts one opaque `query` string. There is no field-level filter, no sort
+    parameter and no sparse-fieldset/expansion mechanism in either spec.
+metrics_query:
+  params: [metricType (required), query, from, to, offset, limit]
+  note: from/to are strings; no format declared, so an agent cannot tell ISO-8601 from a relative window.
+versioning:
+  style: url-path
+  see: lifecycle/scale-computing-lifecycle.yml
+error_envelope:
+  media_type: application/json
+  shape: '{ statusCode, message, error }'
+  rfc9457: false
+  see: errors/scale-computing-problem-types.yml
+rate_limit_signaling:
+  headers_documented: []
+  headers_observed: []
+  status_on_exhaustion: undocumented
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header was observed on any response from
+    api.scalecomputing.com, and no limit is documented. See rate-limits/scale-computing-rate-limits.yml.
+request_id_tracing:
+  supported: false
+  note: No request-id / correlation-id header documented or observed. Responses carry only etag and date.
+observed_response_headers:
+  headers:
+    x-powered-by: Express
+    access-control-allow-origin: '*'
+    strict-transport-security: max-age=31536000; includeSubDomains
+    etag: weak etags on JSON collection responses
+  note: >-
+    A weak ETag is returned on v2 JSON responses, but no If-None-Match / If-Match behaviour is
+    documented and no 304 or 412 is declared in the spec, so conditional requests are unspecified.
+content_types:
+  request: application/json
+  response: [application/json, text/csv]
+  note: /api/v2/clusters/download and /api/v2/vms/download return text/csv.
+idempotency:
+  supported: false
+  header: null
+  scope: null
+  retention: null
+  evidence: >-
+    No Idempotency-Key header, no idempotency-key parameter, and no idempotency documentation in either
+    spec or on the Swagger UI page. Of the three v2 write operations, DELETE /api/v2/api-keys/{id} is
+    naturally idempotent and POST /api/v2/clusters/{id}/tags is naturally idempotent (it OVERWRITES the
+    tag set rather than appending), but POST /api/v2/api-keys is not — a retried create yields a second
+    key. Nothing about this is contractual; it is inferred from the operation semantics.
+  na: false
+dry_run_mode:
+  supported: false
+  evidence: No preview/validate-only/dry-run parameter in either spec.
+reversibility:
+  grade: documented
+  applies_to: SC//Fleet Manager API (v2)
+  na: false
+  note: >-
+    The v2 write surface is three operations. One has a real, published reversal path; two do not.
+    No reversal WINDOW is stated anywhere in Scale Computing's documentation, which is what holds this
+    at `documented` rather than `verified`. No window is asserted here because none is published.
+  write_surface:
+  - operation: ClustersController_upsertClusterTags
+    method: POST
+    path: /api/v2/clusters/{id}/tags
+    consequence: overwrites the cluster's entire tag set
+    reversal: ClustersController_upsertClusterTags
+    reversal_kind: re-apply-previous-state
+    window: null
+    window_source: null
+    note: >-
+      Reversible by re-posting the previous tag list, which an agent can capture from
+      ClustersController_findOne (ClusterDto.tags) before writing. This is state replacement, not an
+      undo operation — there is no server-side prior version to restore and no published retention
+      window, so the reversal is only possible if the caller saved the prior value first.
+  - operation: ApiKeyController_create
+    method: POST
+    path: /api/v2/api-keys
+    consequence: mints a new credential; the secret is returned once
+    reversal: ApiKeyController_remove
+    reversal_kind: delete
+    window: null
+    window_source: null
+    note: >-
+      An accidentally created key can be deleted immediately via DELETE /api/v2/api-keys/{id}. No
+      window is published, and none is needed for this direction.
+  - operation: ApiKeyController_remove
+    method: DELETE
+    path: /api/v2/api-keys/{id}
+    consequence: revokes a credential; every integration using it breaks
+    reversal: none
+    reversal_kind: none
+    window: null
+    window_source: null
+    note: >-
+      IRREVERSIBLE. There is no restore/undelete operation and no soft-delete or grace period in the
+      spec. The secret is only ever shown at creation, so a deleted key cannot be recreated with the
+      same value — recovery means minting a new key and re-credentialing every consumer. This is the
+      single most consequential action an agent can take on this API and it has no undo.
+  read_only_surface:
+    note: >-
+      The other 11 v2 operations (clusters, vms, conditions, organization-activities, metrics, the two
+      CSV downloads, health) are read-only; reversibility is `na` for them.
+  v1_core_api:
+    grade: undocumented
+    note: >-
+      The v1 core spec exposes far more destructive operations — DeleteCluster, RemoveOrganization,
+      RemoveStagedCluster, RemoveOrganizationUser, DeleteOrganizationRole, DeleteAuth — with NO
+      summaries, NO descriptions and NO published documentation of any kind. No reversal path or window
+      can be asserted for any of them, and none is invented here. An agent must treat every v1 write as
+      unrecoverable.
+cross_links:
+  errors: errors/scale-computing-problem-types.yml
+  lifecycle: lifecycle/scale-computing-lifecycle.yml
+  authentication: authentication/scale-computing-authentication.yml
+  rate_limits: rate-limits/scale-computing-rate-limits.yml
+  data_model: data-model/scale-computing-data-model.yml

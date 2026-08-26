@@ -1,0 +1,3820 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Record_string.string_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"ApiValidationError": {
+				"properties": {
+					"params": {
+						"$ref": "#/components/schemas/Record_string.string_"
+					},
+					"instancePath": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"ApiResponse": {
+				"properties": {
+					"isValid": {
+						"type": "boolean"
+					},
+					"error": {
+						"properties": {
+							"validationErrors": {
+								"items": {
+									"$ref": "#/components/schemas/ApiValidationError"
+								},
+								"type": "array"
+							},
+							"message": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"validationErrors",
+							"message"
+						],
+						"type": "object"
+					},
+					"data": {
+						"additionalProperties": true,
+						"type": "object"
+					}
+				},
+				"required": [
+					"isValid"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"OnlineStatus": {
+				"enum": [
+					"online",
+					"offline"
+				],
+				"type": "string"
+			},
+			"HealthState": {
+				"enum": [
+					"healthy",
+					"disconnected",
+					"connecting",
+					"critical",
+					"warning",
+					"notice",
+					"info"
+				],
+				"type": "string"
+			},
+			"ClusterHeatlh": {
+				"properties": {
+					"score": {
+						"type": "number",
+						"format": "double"
+					},
+					"state": {
+						"$ref": "#/components/schemas/HealthState"
+					}
+				},
+				"required": [
+					"score",
+					"state"
+				],
+				"type": "object"
+			},
+			"ClusterDataAvailableUpdate": {
+				"properties": {
+					"timestamp": {
+						"type": "number",
+						"format": "double"
+					},
+					"revision": {
+						"type": "number",
+						"format": "double"
+					},
+					"minorVersion": {
+						"type": "number",
+						"format": "double"
+					},
+					"majorVersion": {
+						"type": "number",
+						"format": "double"
+					},
+					"buildID": {
+						"type": "number",
+						"format": "double"
+					},
+					"changelog": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"uuid": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"timestamp",
+					"revision",
+					"minorVersion",
+					"majorVersion",
+					"buildID",
+					"changelog",
+					"description",
+					"uuid"
+				],
+				"type": "object"
+			},
+			"ClusterUpdateStatus": {
+				"properties": {
+					"failNotes": {
+						"type": "string"
+					},
+					"toBuild": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"toVersion": {
+						"type": "string",
+						"nullable": true
+					},
+					"percent": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string"
+					},
+					"isUpdating": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"percent",
+					"message",
+					"state",
+					"isUpdating"
+				],
+				"type": "object"
+			},
+			"Partial_ClusterData_": {
+				"properties": {
+					"uuid": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"version": {
+						"type": "string"
+					},
+					"restApiEnabled": {
+						"type": "boolean"
+					},
+					"updates": {
+						"properties": {
+							"status": {
+								"$ref": "#/components/schemas/ClusterUpdateStatus"
+							},
+							"available": {
+								"items": {
+									"$ref": "#/components/schemas/ClusterDataAvailableUpdate"
+								},
+								"type": "array"
+							}
+						},
+						"required": [
+							"status",
+							"available"
+						],
+						"type": "object"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"meta": {
+						"properties": {
+							"tunnel": {
+								"properties": {
+									"error_code": {
+										"type": "string",
+										"nullable": true
+									},
+									"error": {
+										"type": "string",
+										"nullable": true
+									},
+									"state": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"error_code",
+									"error",
+									"state"
+								],
+								"type": "object"
+							},
+							"conditionCounts": {
+								"properties": {
+									"info": {
+										"type": "number",
+										"format": "double"
+									},
+									"notice": {
+										"type": "number",
+										"format": "double"
+									},
+									"warning": {
+										"type": "number",
+										"format": "double"
+									},
+									"critical": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"info",
+									"notice",
+									"warning",
+									"critical"
+								],
+								"type": "object"
+							},
+							"conditions": {
+								"items": {},
+								"type": "array"
+							},
+							"vms": {
+								"items": {
+									"properties": {
+										"tags": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"stats": {
+											"properties": {
+												"cpuUsage": {
+													"type": "number",
+													"format": "double"
+												}
+											},
+											"required": [
+												"cpuUsage"
+											],
+											"type": "object"
+										},
+										"netDevs": {
+											"items": {
+												"properties": {
+													"ipv4Addresses": {
+														"items": {
+															"type": "string"
+														},
+														"type": "array"
+													}
+												},
+												"required": [
+													"ipv4Addresses"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"numVCPU": {
+											"type": "number",
+											"format": "double"
+										},
+										"mem": {
+											"type": "number",
+											"format": "double"
+										},
+										"driveCapacity": {
+											"type": "number",
+											"format": "double"
+										},
+										"driveAllocation": {
+											"type": "number",
+											"format": "double"
+										},
+										"description": {
+											"type": "string"
+										},
+										"state": {
+											"type": "number",
+											"format": "double"
+										},
+										"name": {
+											"type": "string"
+										},
+										"uuid": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"tags",
+										"stats",
+										"netDevs",
+										"numVCPU",
+										"mem",
+										"driveCapacity",
+										"driveAllocation",
+										"description",
+										"state",
+										"name",
+										"uuid"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							},
+							"vmSummary": {
+								"properties": {
+									"running": {
+										"type": "number",
+										"format": "double"
+									},
+									"total": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"running",
+									"total"
+								],
+								"type": "object"
+							},
+							"vmCount": {
+								"type": "number",
+								"format": "double"
+							},
+							"nodeSummary": {
+								"properties": {
+									"diskLatency": {
+										"properties": {
+											"us": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"us"
+										],
+										"type": "object"
+									},
+									"cpu": {
+										"properties": {
+											"percent": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"percent"
+										],
+										"type": "object"
+									},
+									"memory": {
+										"properties": {
+											"percent": {
+												"type": "number",
+												"format": "double"
+											},
+											"used": {
+												"type": "number",
+												"format": "double"
+											},
+											"available": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"percent",
+											"used",
+											"available"
+										],
+										"type": "object"
+									},
+									"storage": {
+										"properties": {
+											"percent": {
+												"type": "number",
+												"format": "double"
+											},
+											"used": {
+												"type": "number",
+												"format": "double"
+											},
+											"available": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"percent",
+											"used",
+											"available"
+										],
+										"type": "object"
+									}
+								},
+								"required": [
+									"diskLatency",
+									"cpu",
+									"memory",
+									"storage"
+								],
+								"type": "object"
+							},
+							"nodes": {
+								"items": {},
+								"type": "array"
+							},
+							"nodeCount": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"tunnel",
+							"conditionCounts",
+							"conditions",
+							"vms",
+							"vmSummary",
+							"vmCount",
+							"nodeSummary",
+							"nodes",
+							"nodeCount"
+						],
+						"type": "object"
+					},
+					"compatibilities": {
+						"properties": {
+							"tunnel": {
+								"properties": {
+									"version": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"version"
+								],
+								"type": "object"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"Cluster": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"uuid": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"leaderNode": {
+						"type": "string"
+					},
+					"leaderNodeLanIp": {
+						"type": "string"
+					},
+					"organizationId": {
+						"type": "string"
+					},
+					"enabled": {
+						"type": "boolean"
+					},
+					"isSimulated": {
+						"type": "boolean"
+					},
+					"simulationBatchId": {
+						"type": "string"
+					},
+					"onlineStatus": {
+						"$ref": "#/components/schemas/OnlineStatus"
+					},
+					"health": {
+						"$ref": "#/components/schemas/ClusterHeatlh"
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"data": {
+						"$ref": "#/components/schemas/Partial_ClusterData_"
+					},
+					"collectors": {
+						"properties": {},
+						"type": "object"
+					},
+					"lastCheckin": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"_id",
+					"uuid",
+					"leaderNode",
+					"organizationId",
+					"enabled",
+					"isSimulated",
+					"simulationBatchId",
+					"onlineStatus",
+					"health",
+					"tags",
+					"collectors",
+					"createdAt",
+					"deletedAt"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Boolean": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"AdditionalRouteArgs": {
+				"properties": {
+					"query": {
+						"$ref": "#/components/schemas/Record_string.string_"
+					},
+					"path": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"query",
+					"path"
+				],
+				"type": "object"
+			},
+			"NodeData": {
+				"properties": {
+					"ping": {
+						"properties": {
+							"interval": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"interval"
+						],
+						"type": "object"
+					},
+					"registration": {
+						"properties": {
+							"secretKey": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"secretKey"
+						],
+						"type": "object"
+					},
+					"cluster": {
+						"properties": {
+							"uuid": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"uuid"
+						],
+						"type": "object"
+					},
+					"hcOSIdentifier": {
+						"type": "string"
+					},
+					"firmware": {
+						"type": "string"
+					},
+					"macAddress": {
+						"type": "string"
+					},
+					"manufacturer": {
+						"type": "string"
+					},
+					"model": {
+						"type": "string"
+					},
+					"serialNumber": {
+						"type": "string"
+					},
+					"identifier": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"HardwareCollectorData": {
+				"properties": {
+					"identifier": {
+						"type": "string"
+					},
+					"serialNumber": {
+						"type": "string"
+					},
+					"model": {
+						"type": "string"
+					},
+					"manufacturer": {
+						"type": "string"
+					},
+					"macAddress": {
+						"type": "string"
+					},
+					"firmware": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"identifier",
+					"serialNumber",
+					"model",
+					"manufacturer",
+					"macAddress",
+					"firmware"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"SecretKeyCollectorData": {
+				"properties": {
+					"secretKey": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"secretKey"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"ZeroTouchStatusCollectorData": {
+				"properties": {
+					"state": {
+						"items": {
+							"properties": {
+								"clusterinitialized": {
+									"type": "number",
+									"enum": [
+										0,
+										1
+									]
+								},
+								"allnodesincluster": {
+									"type": "number",
+									"enum": [
+										0,
+										1
+									]
+								},
+								"isinitializingnode": {
+									"type": "number",
+									"enum": [
+										0,
+										1
+									]
+								},
+								"allnodesinitialized": {
+									"type": "number",
+									"enum": [
+										0,
+										1
+									]
+								},
+								"nodeinitcomplete": {
+									"type": "number",
+									"enum": [
+										0,
+										1
+									]
+								},
+								"preexecoverride": {
+									"type": "number",
+									"enum": [
+										0,
+										1
+									]
+								}
+							},
+							"required": [
+								"clusterinitialized",
+								"allnodesincluster",
+								"isinitializingnode",
+								"allnodesinitialized",
+								"nodeinitcomplete",
+								"preexecoverride"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"clusterinit": {
+						"properties": {
+							"progress": {
+								"type": "string"
+							},
+							"lastFailure": {
+								"type": "string"
+							},
+							"lastAction": {
+								"type": "string"
+							},
+							"message": {
+								"type": "string"
+							},
+							"status": {
+								"type": "string"
+							},
+							"isLeader": {
+								"type": "boolean",
+								"enum": [
+									true
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"progress",
+							"lastFailure",
+							"lastAction",
+							"message",
+							"status",
+							"isLeader"
+						],
+						"type": "object"
+					},
+					"nodeinit": {
+						"properties": {
+							"backplaneIP": {
+								"type": "string"
+							},
+							"initializingNode": {
+								"type": "string"
+							},
+							"progress": {
+								"type": "string"
+							},
+							"lastFailure": {
+								"type": "string"
+							},
+							"lastAction": {
+								"type": "string"
+							},
+							"message": {
+								"type": "string"
+							},
+							"status": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"backplaneIP",
+							"initializingNode",
+							"progress",
+							"lastFailure",
+							"lastAction",
+							"message",
+							"status"
+						],
+						"type": "object"
+					},
+					"nodeStates": {
+						"items": {
+							"properties": {
+								"pinged": {
+									"type": "string"
+								},
+								"nodeInitialized": {
+									"type": "string"
+								},
+								"identifier": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"pinged",
+								"nodeInitialized",
+								"identifier"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"sczerotouchIteration": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"state",
+					"clusterinit",
+					"nodeinit",
+					"nodeStates",
+					"sczerotouchIteration"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"PingCollectorData": {
+				"properties": {
+					"interval": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"interval"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"INode": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"hardwareIdentifier": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/NodeData"
+					},
+					"organizationId": {
+						"type": "string"
+					},
+					"isSimulated": {
+						"type": "boolean"
+					},
+					"registrationCode": {
+						"type": "string",
+						"nullable": true
+					},
+					"isVerified": {
+						"type": "boolean"
+					},
+					"clusterId": {
+						"type": "string",
+						"nullable": true
+					},
+					"onlineStatus": {
+						"type": "string",
+						"enum": [
+							"pending",
+							"offline",
+							"online"
+						]
+					},
+					"stagedClusterId": {
+						"type": "string"
+					},
+					"cluster": {
+						"properties": {
+							"uuid": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"uuid"
+						],
+						"type": "object"
+					},
+					"isLeader": {
+						"type": "boolean"
+					},
+					"simulationBatchId": {
+						"type": "string",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"lastCheckin": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"collectors": {
+						"properties": {
+							"ping": {
+								"properties": {
+									"data": {
+										"$ref": "#/components/schemas/PingCollectorData"
+									},
+									"version": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"data",
+									"version"
+								],
+								"type": "object"
+							},
+							"zeroTouchStatus": {
+								"properties": {
+									"data": {
+										"$ref": "#/components/schemas/ZeroTouchStatusCollectorData"
+									},
+									"version": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"data",
+									"version"
+								],
+								"type": "object"
+							},
+							"secretKey": {
+								"properties": {
+									"data": {
+										"$ref": "#/components/schemas/SecretKeyCollectorData"
+									},
+									"version": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"data",
+									"version"
+								],
+								"type": "object"
+							},
+							"hardware": {
+								"properties": {
+									"data": {
+										"$ref": "#/components/schemas/HardwareCollectorData"
+									},
+									"version": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"data",
+									"version"
+								],
+								"type": "object"
+							}
+						},
+						"type": "object"
+					},
+					"asset": {
+						"properties": {
+							"macAddress": {
+								"type": "string",
+								"description": "From Salesforce MAC_Address__c when present; informational only. UI uses data.macAddress from node check-in."
+							},
+							"type": {
+								"type": "string",
+								"description": "From Salesforce Type__c when present"
+							},
+							"accountChangedAt": {
+								"type": "string",
+								"format": "date-time",
+								"description": "When accountId last transitioned (SF ownership change). The\ndisplacement heal only trusts secret-key events that originated\nafter this moment, so a stale event queued from before the\ntransfer can't re-assert the displaced manual claim (#4831)."
+							},
+							"accountId": {
+								"type": "string",
+								"description": "Salesforce account ID that owns the asset; for auditing"
+							},
+							"softwareSerialNumber": {
+								"type": "string"
+							},
+							"shipDate": {
+								"type": "string"
+							},
+							"model": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"softwareSerialNumber",
+							"shipDate",
+							"model",
+							"name",
+							"id"
+						],
+						"type": "object"
+					},
+					"isDuplicateSerialNumber": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id",
+					"hardwareIdentifier",
+					"data",
+					"organizationId",
+					"isSimulated",
+					"registrationCode",
+					"isVerified",
+					"clusterId",
+					"onlineStatus",
+					"stagedClusterId",
+					"cluster",
+					"isLeader",
+					"simulationBatchId",
+					"createdAt",
+					"lastCheckin",
+					"collectors",
+					"isDuplicateSerialNumber"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Error": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"stack": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"NodeAssetPayload": {
+				"properties": {
+					"asset": {
+						"properties": {
+							"softwareSerialNumber": {
+								"type": "string"
+							},
+							"shipDate": {
+								"type": "string"
+							},
+							"model": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"softwareSerialNumber",
+							"shipDate",
+							"model",
+							"name",
+							"id"
+						],
+						"type": "object"
+					},
+					"serialNumber": {
+						"type": "string"
+					},
+					"organizationId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"asset",
+					"serialNumber",
+					"organizationId"
+				],
+				"type": "object"
+			},
+			"OrganizationRole": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"organizationId": {
+						"type": "string"
+					},
+					"roleId": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"roles": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"permissions": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"_id",
+					"organizationId",
+					"roleId",
+					"name",
+					"description",
+					"roles",
+					"permissions"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"OrganizationSettings": {
+				"properties": {
+					"simulationEnabled": {
+						"type": "boolean"
+					},
+					"secureLinkDisabled": {
+						"type": "boolean"
+					},
+					"simulations": {
+						"properties": {
+							"totalClustersPerBatch": {
+								"type": "number",
+								"format": "double"
+							},
+							"totalBatches": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"totalClustersPerBatch",
+							"totalBatches"
+						],
+						"type": "object"
+					},
+					"monitoring": {
+						"properties": {
+							"enabled": {
+								"type": "boolean",
+								"enum": [
+									false
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"enabled"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"simulationEnabled",
+					"secureLinkDisabled",
+					"simulations",
+					"monitoring"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Version": {
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"label": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"count",
+					"label"
+				],
+				"type": "object"
+			},
+			"VersionCounts": {
+				"properties": {},
+				"additionalProperties": {
+					"$ref": "#/components/schemas/Version"
+				},
+				"type": "object"
+			},
+			"OrgnizationStats": {
+				"properties": {
+					"online": {
+						"type": "number",
+						"format": "double"
+					},
+					"offline": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"health": {
+						"additionalProperties": true,
+						"type": "object"
+					},
+					"conditions": {
+						"additionalProperties": true,
+						"type": "object"
+					},
+					"versions": {
+						"$ref": "#/components/schemas/VersionCounts"
+					}
+				},
+				"required": [
+					"online",
+					"offline",
+					"total",
+					"health",
+					"conditions",
+					"versions"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Organization": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"clusterSecretKey": {
+						"type": "string"
+					},
+					"settings": {
+						"$ref": "#/components/schemas/OrganizationSettings"
+					},
+					"stats": {
+						"$ref": "#/components/schemas/OrgnizationStats"
+					},
+					"salesforce": {
+						"properties": {
+							"syncError": {
+								"type": "string",
+								"nullable": true
+							},
+							"syncStatus": {
+								"type": "string",
+								"enum": [
+									"syncing",
+									"idle",
+									"error"
+								]
+							},
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"syncError",
+							"syncStatus",
+							"name",
+							"id"
+						],
+						"type": "object"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"_id",
+					"name",
+					"clusterSecretKey",
+					"settings",
+					"stats",
+					"salesforce",
+					"deletedAt",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"OrganizationCreationParams": {
+				"properties": {
+					"settings": {
+						"properties": {
+							"secureLinkDisabled": {
+								"type": "boolean"
+							}
+						},
+						"type": "object"
+					},
+					"clusterSecretKey": {},
+					"addDefaultUser": {},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object"
+			},
+			"User": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"displayName": {
+						"type": "string"
+					},
+					"verifiedOn": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"picture": {
+						"type": "string"
+					},
+					"scaleAdminRole": {
+						"type": "string"
+					},
+					"eulaAccepted": {
+						"type": "number",
+						"format": "double"
+					},
+					"resetPassword": {
+						"properties": {
+							"code": {
+								"type": "string"
+							},
+							"link": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"code",
+							"link"
+						],
+						"type": "object"
+					},
+					"inviteToken": {
+						"type": "string",
+						"nullable": true
+					},
+					"inviteIssued": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"providerId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id",
+					"email",
+					"displayName",
+					"verifiedOn",
+					"picture",
+					"scaleAdminRole",
+					"eulaAccepted",
+					"resetPassword",
+					"inviteToken",
+					"inviteIssued",
+					"providerId"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"SalesforceAccount": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"StagedClusterCreateParams": {
+				"properties": {
+					"clusterName": {
+						"type": "string"
+					},
+					"lanNetmask": {
+						"type": "string"
+					},
+					"lanGateway": {
+						"type": "string"
+					},
+					"backplaneNetmask": {
+						"type": "string"
+					},
+					"backplaneVLANID": {
+						"type": "number",
+						"format": "double"
+					},
+					"initializingNode": {
+						"type": "string"
+					},
+					"dnsIP": {
+						"type": "string"
+					},
+					"priority": {
+						"type": "number",
+						"format": "double"
+					},
+					"nodes": {
+						"items": {
+							"properties": {
+								"bypassNetworkCheck": {
+									"type": "string"
+								},
+								"serialNumber": {
+									"type": "string"
+								},
+								"softwareSerialNumber": {
+									"type": "string"
+								},
+								"backplaneIP": {
+									"type": "string"
+								},
+								"lanIP": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"modelNumber": {
+									"type": "string"
+								},
+								"uuid": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"bypassNetworkCheck",
+								"serialNumber",
+								"softwareSerialNumber",
+								"backplaneIP",
+								"lanIP",
+								"name",
+								"modelNumber",
+								"uuid",
+								"id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"clusterName",
+					"lanNetmask",
+					"lanGateway",
+					"backplaneNetmask",
+					"backplaneVLANID",
+					"nodes"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"AdminUserListResult": {
+				"properties": {
+					"userId": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"providerId": {
+						"type": "string",
+						"nullable": true
+					},
+					"scaleAdminRole": {
+						"type": "string",
+						"nullable": true
+					},
+					"verifiedOn": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"inviteIssued": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"userId",
+					"email",
+					"providerId",
+					"scaleAdminRole",
+					"verifiedOn",
+					"inviteIssued"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"AdminUserDetailResult": {
+				"properties": {
+					"userId": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"providerId": {
+						"type": "string",
+						"nullable": true
+					},
+					"scaleAdminRole": {
+						"type": "string",
+						"nullable": true
+					},
+					"verifiedOn": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"inviteIssued": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"organizations": {
+						"items": {
+							"properties": {
+								"lastAccess": {
+									"type": "string",
+									"format": "date-time",
+									"nullable": true
+								},
+								"providerId": {
+									"type": "string",
+									"nullable": true
+								},
+								"roleName": {
+									"type": "string"
+								},
+								"role": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"lastAccess",
+								"providerId",
+								"roleName",
+								"role",
+								"name",
+								"_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId",
+					"email",
+					"providerId",
+					"scaleAdminRole",
+					"verifiedOn",
+					"inviteIssued",
+					"organizations"
+				],
+				"type": "object",
+				"additionalProperties": true
+			}
+		},
+		"securitySchemes": {
+			"tsoa_auth": {
+				"type": "oauth2",
+				"flows": {
+					"implicit": {
+						"authorizationUrl": "http://swagger.io/api/oauth/dialog",
+						"scopes": {}
+					}
+				}
+			}
+		}
+	},
+	"info": {
+		"title": "core",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/api/v1/clusters/{clusterId}": {
+			"get": {
+				"operationId": "GetCluster",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "clusterId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteCluster",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:delete:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "clusterId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateCluster",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:update:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "clusterId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/clusters": {
+			"get": {
+				"operationId": "GetClusters",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Cluster"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "filters",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "projections",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/clusters/{clusterId}/stream/start": {
+			"post": {
+				"operationId": "StartClusterStream",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Boolean"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "clusterId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"autoStopSeconds": {
+										"type": "number",
+										"format": "double"
+									},
+									"intervalMS": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/clusters/{clusterId}/command": {
+			"post": {
+				"operationId": "ClusterCommandSend",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a command request.",
+				"security": [
+					{
+						"jwt": [
+							"cluster:update:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "clusterId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"payload": {
+										"additionalProperties": true,
+										"type": "object"
+									},
+									"command": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"payload",
+									"command"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/clusters/{clusterId}/tunnel": {
+			"post": {
+				"operationId": "StartTunnel",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"secureLink:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "clusterId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"force": {
+										"type": "boolean"
+									},
+									"useUuid": {
+										"type": "boolean"
+									},
+									"additionalRouteArgs": {
+										"$ref": "#/components/schemas/AdditionalRouteArgs"
+									}
+								},
+								"required": [
+									"additionalRouteArgs"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "ViewTunnel",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"secureLink:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "clusterId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/clusters/migrate": {
+			"post": {
+				"operationId": "Migrate",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"clusterMigration:create:*"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/nodes": {
+			"post": {
+				"operationId": "CreateNode",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/INode"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"simulationBatchId": {},
+									"clusterSecretKey": {
+										"type": "string"
+									},
+									"hardwareIdentifier": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"hardwareIdentifier"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetNodes",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/INode"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"node:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "filters",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "select",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/nodes/asset": {
+			"post": {
+				"operationId": "CreateNodeAsset",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/INode"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"asset:create:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/NodeAssetPayload"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/nodes/{nodeId}": {
+			"get": {
+				"operationId": "GetNode",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"node:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "nodeId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateNode",
+				"responses": {
+					"200": {
+						"description": "Updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/INode"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict - Serial number already in use",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"502": {
+						"description": "Bad Gateway - Serial could not be saved to asset system",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"node:update:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "nodeId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"data": {
+										"properties": {
+											"serialNumber": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"serialNumber"
+										],
+										"type": "object"
+									}
+								},
+								"required": [
+									"data"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/nodes/sync": {
+			"post": {
+				"operationId": "SyncNodesToFleet",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"skipped": {
+											"type": "number",
+											"format": "double"
+										},
+										"errors": {
+											"type": "number",
+											"format": "double"
+										},
+										"published": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"skipped",
+										"errors",
+										"published"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"nodeMigration:create:*"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/nodes/certificate": {
+			"post": {
+				"operationId": "RequestClientCertificate",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"csr": {
+										"type": "string"
+									},
+									"registrationCode": {
+										"type": "string"
+									},
+									"hardwareIdentifier": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"csr",
+									"registrationCode",
+									"hardwareIdentifier"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/organizationRoles": {
+			"post": {
+				"operationId": "CreateOrganizationRole",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganizationRole"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationRole:create:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"roles": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									},
+									"description": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"roles",
+									"description",
+									"name"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOrganizationRoles",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/OrganizationRole"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationRole:read:*"
+						]
+					}
+				],
+				"parameters": []
+			},
+			"delete": {
+				"operationId": "DeleteOrganizationRole",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationRole:delete:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"roleId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"roleId"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/organizationRoles/{roleId}": {
+			"get": {
+				"operationId": "GetOrganizationRole",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganizationRole"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationRole:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "roleId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateOrganizationRole",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationRole:update:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "roleId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"roles": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									},
+									"description": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"roles",
+									"description",
+									"name"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/organizations/{organizationId}": {
+			"get": {
+				"operationId": "GetOrganization",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Organization"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "organizationId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "RemoveOrganization",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Organization"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organization:delete:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "organizationId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/organizations": {
+			"get": {
+				"operationId": "GetAllOrganizations",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Organization"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateOrganization",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Organization"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organization:create:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OrganizationCreationParams"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/organizations/sync": {
+			"post": {
+				"operationId": "SyncOrganizationsToFleet",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"errors": {
+											"type": "number",
+											"format": "double"
+										},
+										"published": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"errors",
+										"published"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organization:create:*"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/organizations/current/secret-key": {
+			"get": {
+				"operationId": "GetOrganizationSecretKey",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationSecretKey:read:*"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/organization-salesforce-account": {
+			"put": {
+				"operationId": "UpdateOrganizationSalesforceAccount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Organization"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationSalesforceAccount:create:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"id": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"name",
+									"id"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/organization/invite-user": {
+			"post": {
+				"operationId": "InviteOrganizationUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationUser:create:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"provider": {
+										"type": "string"
+									},
+									"role": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"provider",
+									"role",
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/organization/reinvite-user": {
+			"post": {
+				"operationId": "ReinviteOrganizationUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationUser:read:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"provider": {
+										"type": "string"
+									},
+									"role": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"provider",
+									"role",
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/organizationUser": {
+			"get": {
+				"operationId": "GetOrganizationUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"email": {
+											"type": "string"
+										},
+										"organizationId": {
+											"type": "string"
+										},
+										"providerId": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"email",
+										"organizationId",
+										"providerId"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/organizationUsers": {
+			"get": {
+				"operationId": "GetOrganizationUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/User"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationUser:read:*"
+						]
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "UpdateOrganizationUser",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationUser:update:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"providerId": {
+										"type": "string"
+									},
+									"roleId": {
+										"type": "string"
+									},
+									"userId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"providerId",
+									"roleId",
+									"userId"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveOrganizationUser",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"organizationUser:delete:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"userId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"userId"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/salesforce/account/{id}": {
+			"get": {
+				"operationId": "GetSalesForceAccount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SalesforceAccount"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"salesforceAccount:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "SyncSalesforceAssets",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"asset:update:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/staged-clusters/{id}": {
+			"get": {
+				"operationId": "GetStagedCluster",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:read:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "RemoveStagedCluster",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:delete:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/staged-clusters": {
+			"get": {
+				"operationId": "GetStagedClusters",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:read:*"
+						]
+					}
+				],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateStagedCluster",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:create:*"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StagedClusterCreateParams"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/staged-clusters/{id}/update": {
+			"post": {
+				"operationId": "UpdateStagedCluster",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:update:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StagedClusterCreateParams"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/staged-clusters/{id}/resend-config": {
+			"post": {
+				"operationId": "ResendClusterConfig",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": [
+							"cluster:update:*"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/users/me": {
+			"get": {
+				"operationId": "AuthenticateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/me/updateProvider": {
+			"post": {
+				"operationId": "UpdateProvider",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"provider": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"provider"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/users/me/signup": {
+			"post": {
+				"operationId": "SignUp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"organization": {
+											"$ref": "#/components/schemas/Organization"
+										},
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									},
+									"required": [
+										"organization",
+										"user"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									},
+									"organizationName": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"email",
+									"organizationName"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/users/me/sendResetPasswordEmail": {
+			"post": {
+				"operationId": "SendResetPasswordEmail",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/users/me/resetPassword": {
+			"post": {
+				"operationId": "ResetPassword",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"code": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"code",
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/users/me/access-token": {
+			"post": {
+				"operationId": "CreateAccessToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"name": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/users/me/granted": {
+			"get": {
+				"operationId": "CheckIsGranted",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "scope",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/users/me/organizations": {
+			"get": {
+				"operationId": "GetAuthenticatedUserOrganizations",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Organization"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/eula": {
+			"post": {
+				"operationId": "AcceptEula",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"error": {
+											"type": "string"
+										},
+										"eulaAccepted": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"eulaAccepted"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/me/verifyInviteToken": {
+			"post": {
+				"operationId": "VerifyInviteToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"token": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"token",
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/users/admin/all": {
+			"get": {
+				"operationId": "AdminGetAllUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/AdminUserListResult"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/admin/{userId}": {
+			"get": {
+				"operationId": "AdminGetUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminUserDetailResult"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/users/auth/deleteAuth": {
+			"delete": {
+				"operationId": "DeleteAuth",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

@@ -1,23 +1,195 @@
 aid: scale-computing
 name: Scale Computing
-description: 'Scale Computing is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Scale Computing builds SC//Platform, an edge-computing and hyperconverged infrastructure stack made up of
+  SC//HyperCore (a self-healing KVM-based virtualization and storage OS that runs on clustered appliance nodes)
+  and SC//Fleet Manager (a cloud console that monitors, updates and orchestrates thousands of distributed
+  HyperCore clusters, VMs and containerized edge applications from one place). The programmable surface is split
+  the same way: SC//HyperCore exposes an on-appliance REST API at /rest/v1 on each clustered node for VM, disk,
+  network, snapshot and replication automation, while SC//Fleet Manager exposes a public, API-key-authenticated
+  cloud REST API at api.scalecomputing.com for fleet-wide clusters, virtual machines, conditions, metrics,
+  organization activity and API-key management. Scale Computing also ships and maintains a first-party Ansible
+  collection and Terraform provider for HyperCore, publishes REST API example scripts on GitHub, and defines a
+  JSON Schema for Fleet Manager application manifests used by its edge application lifecycle management feature.
 url: https://raw.githubusercontent.com/api-evangelist/scale-computing/refs/heads/main/apis.yml
+image: https://www.scalecomputing.com/asset-transforms/_1200x630_letterbox_center-center_82_none/scale-computing-logo.png?mtime=1778613063
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
+- Edge Computing
+- Hyperconverged Infrastructure
+- Virtualization
+- Infrastructure Management
+- Fleet Management
+- Virtual Machines
+- Observability
+- Infrastructure as Code
+- Kubernetes
 - Company
-apis: []
+tags_raw:
+- edge-computing
+- hyperconverged-infrastructure
+- virtualization
+- infrastructure-management
+- fleet-management
+- virtual-machines
+- observability
+- infrastructure-as-code
+- kubernetes
+apis:
+- name: SC//Fleet Manager API
+  description: >-
+    Public cloud REST API for SC//Fleet Manager. Read-mostly, role-restricted access to an organization's fleet:
+    list and retrieve HyperCore clusters, virtual machines, cluster conditions (issues reported by clusters),
+    organization activity audit entries and historical CPU/RAM/storage time-series metrics; CSV export endpoints
+    for clusters and VMs; write access limited to overwriting cluster tags and creating/deleting API keys.
+    Authenticated with an `api-key` request header issued from the Fleet Manager organization settings screen.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Edge Computing
+  - Fleet Management
+  - Virtual Machines
+  - Infrastructure Management
+  - Observability
+  tags_raw:
+  - edge-computing
+  - fleet-management
+  - virtual-machines
+  - infrastructure-management
+  - observability
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-fleet-manager-openapi.json
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+  - type: Overlay
+    url: overlays/scale-computing-fleet-manager-overlay.yaml
+- name: Scale Computing Platform Core API
+  description: >-
+    Undocumented v1 control-plane REST API served alongside SC//Fleet Manager on api.scalecomputing.com, whose
+    OpenAPI 3.0 description is published anonymously at /swagger.json. Covers cluster registration and command
+    dispatch, node registration and certificate issuance, staged (zero-touch) cluster provisioning, organization
+    and organization-role management, user invitation/authentication/access-token issuance, EULA acceptance and
+    Salesforce account synchronization. Scale Computing publishes no human-facing reference for this surface;
+    the spec itself is the only published artifact, and it carries no operation summaries, tags or descriptions.
+  humanURL: https://api.scalecomputing.com/swagger.json
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Infrastructure Management
+  - Edge Computing
+  - Identity
+  tags_raw:
+  - infrastructure-management
+  - edge-computing
+  - identity
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-core-openapi.json
+  - type: Overlay
+    url: overlays/scale-computing-core-overlay.yaml
+- name: SC//HyperCore REST API
+  description: >-
+    On-appliance REST API exposed by every SC//HyperCore (HC3) clustered node for automating virtual machines,
+    virtual disks, networks, snapshots, snapshot schedules, replication, node and cluster operations, users and
+    roles. It is served from the customer's own cluster rather than from a Scale Computing host, so its base URL
+    is templated on the clustered node address and its Swagger documentation is reachable only from inside the
+    customer network at /rest/v1/docs/ or through the Control Panel Support tab. Scale Computing publishes
+    example scripts against it on GitHub and wraps it in a first-party Ansible collection and Terraform provider.
+  humanURL: https://github.com/ScaleComputing/RestAPIExamples
+  baseURL: https://{clustered_node_ip}/rest/v1
+  tags:
+  - Virtualization
+  - Hyperconverged Infrastructure
+  - Virtual Machines
+  - Infrastructure as Code
+  tags_raw:
+  - virtualization
+  - hyperconverged-infrastructure
+  - virtual-machines
+  - infrastructure-as-code
+  properties:
+  - type: SourceCode
+    url: https://github.com/ScaleComputing/RestAPIExamples
+  - type: Documentation
+    url: https://scalecomputing.github.io/HyperCoreAnsibleCollection/
+common:
+- type: DomainSecurity
+  url: security/scale-computing-domain-security.yml
+- type: Website
+  url: https://www.scalecomputing.com/
+- type: Documentation
+  url: https://api.scalecomputing.com/api/v2
+- type: APIReference
+  url: https://api.scalecomputing.com/api/v2
+- type: DeveloperPortal
+  url: https://github.com/ScaleComputing
+- type: GitHubOrganization
+  url: https://github.com/ScaleComputing
+- type: Support
+  url: https://www.scalecomputing.com/support
+- type: HelpCenter
+  url: https://community.scalecomputing.com/
+- type: Blog
+  url: https://www.scalecomputing.com/blog
+- type: Pricing
+  url: https://www.scalecomputing.com/pricing
+- type: Login
+  url: https://fleet.scalecomputing.com/
+- type: TermsOfService
+  url: https://www.scalecomputing.com/eula
+- type: PrivacyPolicy
+  url: https://www.scalecomputing.com/privacy-policy
+- type: JSONSchema
+  url: json-schema/scale-computing-fleet-manager-application-manifest.json
+- type: Packages
+  url: packages/scale-computing-packages.yml
+- type: SDKs
+  url: packages/scale-computing-packages.yml
+- type: Authentication
+  url: authentication/scale-computing-authentication.yml
+- type: Conventions
+  url: conventions/scale-computing-conventions.yml
+- type: ErrorCatalog
+  url: errors/scale-computing-problem-types.yml
+- type: DataModel
+  url: data-model/scale-computing-data-model.yml
+- type: Conformance
+  url: conformance/scale-computing-conformance.yml
+- type: Lifecycle
+  url: lifecycle/scale-computing-lifecycle.yml
+- type: RateLimits
+  url: rate-limits/scale-computing-rate-limits.yml
+- type: Plans
+  url: plans/scale-computing-plans-pricing.yml
+- type: LLMsTxt
+  url: llms/scale-computing-llms.txt
+- type: MCPServer
+  url: mcp/scale-computing-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: WellKnown
+  url: well-known/scale-computing-well-known.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
-common:
-- type: Website
-  url: https://forgeglobal.com/scale-computing_stock/
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1

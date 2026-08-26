@@ -1,0 +1,45 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Scale Computing Platform Core API
+  version: 1.0.0
+extends: openapi/scale-computing-core-openapi.json
+x-provenance:
+  generated: '2026-08-26'
+  method: generated
+  source: openapi/scale-computing-core-openapi.json (harvested verbatim from https://api.scalecomputing.com/swagger.json 2026-08-26)
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: scale-computing
+    x-apievangelist-harvested: '2026-08-26'
+    x-apievangelist-source: https://api.scalecomputing.com/swagger.json
+    x-apievangelist-title-note: >-
+      info.title is the generator default "core". The spec is served anonymously from Scale Computing's
+      own API host, its relative servers entry ("/") resolves to api.scalecomputing.com, and every
+      schema and path is Scale Computing domain vocabulary (Cluster, Node, Organization, StagedCluster,
+      SyncNodesToFleet, SyncOrganizationsToFleet, SalesforceAccount). Ownership confirmed on that
+      basis; no third-party brand appears anywhere in the document.
+    x-apievangelist-documentation: none published
+- target: $.info
+  update:
+    x-contract-quality:
+      operations: 56
+      with_summary: 0
+      with_description: 0
+      with_tags: 0
+      with_operationid: 56
+      note: >-
+        A tsoa-generated spec with complete operationIds but zero summaries, descriptions and tags.
+        It is machine-parseable and human-unreadable.
+- target: $.components.securitySchemes.tsoa_auth
+  update:
+    x-apievangelist-defect: >-
+      Stock tsoa scaffold placeholder, not a Scale Computing authorization server: the implicit flow
+      points at http://swagger.io/api/oauth/dialog and declares zero scopes. Do not treat this API as
+      OAuth 2.0 capable.
+- target: $.info
+  update:
+    x-agentic-warning: >-
+      This surface exposes destructive, undocumented operations — DeleteCluster, RemoveOrganization,
+      RemoveStagedCluster, RemoveOrganizationUser, DeleteOrganizationRole, DeleteAuth — with no
+      published semantics, no reversal paths and no stated windows. Treat every write as unrecoverable.

@@ -1,0 +1,65 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://api.scalecomputing.com/api/v2, https://api.scalecomputing.com/swagger.json,
+  https://www.scalecomputing.com/, github.com/ScaleComputing releases
+versioning:
+  scheme: path
+  pattern: /api/v{n}
+  current: v2
+  current_spec_version: '2.0'
+  previous: v1
+  evidence: >-
+    Two concurrently-served major versions on the same host: /api/v2 (SC//Fleet Manager API, documented,
+    Swagger UI at https://api.scalecomputing.com/api/v2) and /api/v1 (the undocumented core control
+    plane described by https://api.scalecomputing.com/swagger.json, info.version 1.0.0).
+  note: >-
+    No published version policy. v1 is not marked deprecated anywhere; it is simply undocumented, so
+    a consumer cannot tell whether it is legacy, internal-only, or supported.
+deprecation:
+  policy_published: false
+  policy_url: null
+  sunset_header: unknown
+  deprecation_header: unknown
+  deprecated_operations: []
+  evidence: >-
+    Neither published spec marks a single operation `deprecated: true`. No deprecation or sunset policy
+    page was found on scalecomputing.com. RFC 8594 Sunset/Deprecation header support could not be
+    verified because every collection endpoint requires an api-key.
+status_page:
+  published: false
+  url: null
+  evidence: >-
+    status.scalecomputing.com does not resolve (DNS NXDOMAIN). No status/uptime page linked from the
+    site, the support page, or the Fleet Manager console URL. GET /health is declared in the v2 spec
+    but returns 404 at https://api.scalecomputing.com/health.
+sla:
+  published: false
+  url: null
+  note: >-
+    No SLA document on the legal index (https://www.scalecomputing.com/legal lists only the privacy
+    policy, EULAs, the SC//Connect ULA, a description of services and open-source licences).
+support:
+  url: https://www.scalecomputing.com/support
+  community: https://community.scalecomputing.com/
+  note: >-
+    The community portal is a Salesforce Experience Cloud site; its REST API Documentation topic
+    (https://community.scalecomputing.com/s/topic/0TO4u0000009VvTGAU/rest-api-documentation) returns
+    HTTP 401 to an anonymous client, so HyperCore API reference material is customer-login-gated.
+release_cadence:
+  observed:
+  - artifact: terraform-provider-hypercore
+    releases: [v1.0.0 2025-04-26, v1.1.0 2025-05-29, v1.2.0 2025-11-13, v1.3.0 2025-12-04, v1.4.0 2026-02-09]
+  - artifact: scale_computing.hypercore (Ansible)
+    releases: [v1.0.0 2023-05-10, v1.3.0 2023-07-07, v1.4.0 2024-03-29, v1.5.0 2024-05-28, v1.6.0 2024-09-02, v1.6.1 2025-03-17]
+  note: >-
+    These are the only dated, first-party release trails Scale Computing publishes for its API surface.
+    No changelog exists for either REST API itself.
+changelog:
+  published: false
+  url: null
+  note: >-
+    No dated changelog or release-notes page for the SC//Fleet Manager API or SC//HyperCore API was
+    found. Feature announcements appear as press releases and blog posts
+    (e.g. https://www.scalecomputing.com/press-releases/sc-fleet-manager-adds-application-lifecycle-management,
+    2025-12-09) rather than as a versioned change log, so no ChangeLog pointer is emitted.

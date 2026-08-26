@@ -1,0 +1,70 @@
+generated: '2026-08-26'
+method: derived
+status: candidate
+source: openapi/scale-computing-fleet-manager-openapi.json
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  note: >-
+    Scale Computing ships no MCP server. Searched the scalecomputing.com site and press releases, the
+    github.com/ScaleComputing organisation (10 repos), and npm (registry search for "scalecomputing"
+    and "hypercore mcp" — every hit belongs to the unrelated Hypercore P2P append-only-log project).
+    mcp.scalecomputing.com does not resolve. The tools below are a DERIVED CANDIDATE from the published
+    SC//Fleet Manager OpenAPI; no endpoint is asserted because none exists.
+server:
+  name: scale-computing-fleet-manager
+  transport: http
+  url: null
+tools:
+- name: list_clusters
+  description: List the SC//HyperCore clusters in the organization, with health, version and VM counts.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ClustersController_findAll
+- name: get_cluster
+  description: Retrieve a single cluster by id.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ClustersController_findOne
+- name: export_clusters_csv
+  description: Download the cluster list as CSV.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ClustersController_downloadCsv
+- name: set_cluster_tags
+  description: Overwrite the tags on a cluster. Destructive — replaces the existing tag set.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ClustersController_upsertClusterTags
+- name: list_vms
+  description: List virtual machines across the fleet with state, IPs, cores, memory and drive usage.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#VmController_findAll
+- name: get_vm
+  description: Retrieve a single virtual machine by id.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#VmController_findOne
+- name: export_vms_csv
+  description: Download the virtual machine list as CSV.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#VmController_downloadCsv
+- name: list_conditions
+  description: List issues reported by SC//HyperCore clusters, with severity.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ClusterConditionsController_findAll
+- name: get_condition
+  description: Retrieve a single cluster condition by id.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ClusterConditionsController_findOne
+- name: list_organization_activities
+  description: Read the Fleet Manager audit log of user and system events.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#OrganizationActivityController_findAll
+- name: query_metrics
+  description: Query time-series CPU/RAM/storage metrics by metricType over a date range.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#MetricsController_findAll
+- name: list_api_keys
+  description: List the organization's Fleet Manager API keys.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ApiKeyController_findAll
+- name: create_api_key
+  description: Create an API key with a role. Returns the secret once. Privileged.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ApiKeyController_create
+- name: delete_api_key
+  description: Delete an API key. Irreversible.
+  source_operation: openapi/scale-computing-fleet-manager-openapi.json#ApiKeyController_remove
+x-notes:
+- 11 of the 14 candidate tools are read-only; the write surface is exactly three operations
+  (set_cluster_tags, create_api_key, delete_api_key).
+- The v1 "core" control-plane spec (openapi/scale-computing-core-openapi.json) was deliberately NOT
+  mapped to tools — it is undocumented, carries no operation summaries, and includes destructive
+  operations (DeleteCluster, RemoveOrganization, DeleteAuth) with no published semantics.

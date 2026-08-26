@@ -1,0 +1,28 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.scalecomputing.com/pricing
+plan_count: 0
+plans: []
+note: >-
+  Scale Computing publishes no priced plans or tiers. The pricing page markets "transparent pricing" and
+  a "Real-Time Price Quote in Under 30 Seconds" configurator, but every path ends in a generated quote
+  or a sales contact (877-722-5359 / info@scalecomputing.com). No tier names, no list prices, no
+  currency, no billing period and no included quotas are published. Licensing is per-node/per-cluster
+  appliance and subscription licensing arranged through sales and channel partners.
+api_pricing:
+  metered: false
+  note: >-
+    Neither the SC//Fleet Manager API nor the SC//HyperCore REST API is separately priced or metered.
+    Both are entitlements of the underlying platform licence — Fleet Manager API keys are created from
+    the organization settings screen at no additional listed cost, and the HyperCore API is served by
+    the customer's own appliance. There is no self-serve API sign-up and no free tier for the APIs.
+evidence:
+- url: https://www.scalecomputing.com/pricing
+  status: 200
+  finding: quote-only configurator; no named tiers, no prices
+- url: https://www.scalecomputing.com/free-trial
+  status: 200
+  finding: soft-404 (87,613-byte "404 | Scale Computing" catch-all) — no free trial page
+- url: https://www.scalecomputing.com/demo
+  status: 200
+  finding: product tour / demo request form, not a self-serve trial

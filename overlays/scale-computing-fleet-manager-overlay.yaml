@@ -1,0 +1,63 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the SC//Fleet Manager API
+  version: 1.0.0
+extends: openapi/scale-computing-fleet-manager-openapi.json
+x-provenance:
+  generated: '2026-08-26'
+  method: generated
+  source: openapi/scale-computing-fleet-manager-openapi.json (harvested verbatim 2026-08-26)
+  note: >-
+    Enhancements only. The harvested spec is never mutated; every observation below was verified
+    against the live API or the published contract on 2026-08-26.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: scale-computing
+    x-apievangelist-harvested: '2026-08-26'
+    x-apievangelist-source: https://api.scalecomputing.com/api/v2/openapi.json
+    x-apievangelist-surface: SC//Fleet Manager cloud control plane
+- target: $.info
+  update:
+    x-agent-readiness-notes:
+      write_operations: 3
+      read_operations: 11
+      irreversible_operations: 1
+      idempotency: none
+      rate_limit_signal: none
+      error_contract: 400 only — no 401/403/404/429/5xx declared
+- target: $.paths['/api/v2/api-keys/{id}']['delete']
+  update:
+    x-agentic-consequence: irreversible
+    x-agentic-reversal: none
+    x-agentic-note: >-
+      Revoking an API key cannot be undone. No restore operation exists, no soft-delete or grace period
+      is published, and the secret is only ever returned at creation — so recovery means minting a new
+      key and re-credentialing every consumer. Revokes a credential in use by unknown integrations.
+- target: $.paths['/api/v2/api-keys']['post']
+  update:
+    x-agentic-consequence: creates-credential
+    x-agentic-reversal: ApiKeyController_remove
+    x-agentic-note: The created secret is returned exactly once; treat the response as sensitive.
+- target: $.paths['/api/v2/clusters/{id}/tags']['post']
+  update:
+    x-agentic-consequence: overwrites-state
+    x-agentic-reversal: re-post the previous tag value captured from ClustersController_findOne
+    x-apievangelist-defect: >-
+      The requestBody schema is a BROKEN reference — "$ref": "#/components/schemas/" with an empty
+      schema name. The only usable description of the payload is the inline example
+      {"tags": "foo, bar, baz"}, which shows tags are a comma-delimited STRING.
+- target: $.paths['/health']['get']
+  update:
+    x-apievangelist-defect: >-
+      Declared unauthenticated at server https://api.scalecomputing.com, but
+      GET https://api.scalecomputing.com/health returned HTTP 404 when probed 2026-08-26.
+- target: $.components.securitySchemes['API Key']
+  update:
+    x-issued-at: https://fleet.scalecomputing.com/organization/settings
+    x-role-restricted: true
+    x-roles-enumerated: false
+    x-note: >-
+      Every endpoint is role-restricted in alignment with the Fleet Manager UI access levels, but the
+      role vocabulary is not enumerated in the spec (the example payload names "VM Viewer"). The
+      authoritative list lives in the Fleet Manager User Guide on a Salesforce content link.
