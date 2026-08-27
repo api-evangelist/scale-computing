@@ -40,75 +40,15 @@ tags_raw:
 - infrastructure-as-code
 - kubernetes
 apis:
-- name: SC//Fleet Manager API
-  description: >-
-    Public cloud REST API for SC//Fleet Manager. Read-mostly, role-restricted access to an organization's fleet:
-    list and retrieve HyperCore clusters, virtual machines, cluster conditions (issues reported by clusters),
-    organization activity audit entries and historical CPU/RAM/storage time-series metrics; CSV export endpoints
-    for clusters and VMs; write access limited to overwriting cluster tags and creating/deleting API keys.
-    Authenticated with an `api-key` request header issued from the Fleet Manager organization settings screen.
-  humanURL: https://api.scalecomputing.com/api/v2
-  baseURL: https://api.scalecomputing.com
-  tags:
-  - Edge Computing
-  - Fleet Management
-  - Virtual Machines
-  - Infrastructure Management
-  - Observability
-  tags_raw:
-  - edge-computing
-  - fleet-management
-  - virtual-machines
-  - infrastructure-management
-  - observability
-  properties:
-  - type: OpenAPI
-    url: openapi/scale-computing-fleet-manager-openapi.json
-  - type: APIReference
-    url: https://api.scalecomputing.com/api/v2
-  - type: Documentation
-    url: https://api.scalecomputing.com/api/v2
-  - type: Authentication
-    url: authentication/scale-computing-authentication.yml
-  - type: Conventions
-    url: conventions/scale-computing-conventions.yml
-  - type: ErrorCatalog
-    url: errors/scale-computing-problem-types.yml
-  - type: DataModel
-    url: data-model/scale-computing-data-model.yml
-  - type: Overlay
-    url: overlays/scale-computing-fleet-manager-overlay.yaml
-- name: Scale Computing Platform Core API
-  description: >-
-    Undocumented v1 control-plane REST API served alongside SC//Fleet Manager on api.scalecomputing.com, whose
-    OpenAPI 3.0 description is published anonymously at /swagger.json. Covers cluster registration and command
-    dispatch, node registration and certificate issuance, staged (zero-touch) cluster provisioning, organization
-    and organization-role management, user invitation/authentication/access-token issuance, EULA acceptance and
-    Salesforce account synchronization. Scale Computing publishes no human-facing reference for this surface;
-    the spec itself is the only published artifact, and it carries no operation summaries, tags or descriptions.
-  humanURL: https://api.scalecomputing.com/swagger.json
-  baseURL: https://api.scalecomputing.com
-  tags:
-  - Infrastructure Management
-  - Edge Computing
-  - Identity
-  tags_raw:
-  - infrastructure-management
-  - edge-computing
-  - identity
-  properties:
-  - type: OpenAPI
-    url: openapi/scale-computing-core-openapi.json
-  - type: Overlay
-    url: overlays/scale-computing-core-overlay.yaml
 - name: SC//HyperCore REST API
   description: >-
     On-appliance REST API exposed by every SC//HyperCore (HC3) clustered node for automating virtual machines,
-    virtual disks, networks, snapshots, snapshot schedules, replication, node and cluster operations, users and
-    roles. It is served from the customer's own cluster rather than from a Scale Computing host, so its base URL
-    is templated on the clustered node address and its Swagger documentation is reachable only from inside the
-    customer network at /rest/v1/docs/ or through the Control Panel Support tab. Scale Computing publishes
-    example scripts against it on GitHub and wraps it in a first-party Ansible collection and Terraform provider.
+    virtual disks, networks, snapshots, snapshot schedules, replication, node and cluster operations,
+    users and roles. It is served from the customer's own cluster rather than from a Scale Computing host,
+    so its base URL is templated on the clustered node address and its Swagger documentation is reachable
+    only from inside the customer network at /rest/v1/docs/ or through the Control Panel Support tab.
+    Scale Computing publishes example scripts against it on GitHub and wraps it in a first-party Ansible
+    collection and Terraform provider.
   humanURL: https://github.com/ScaleComputing/RestAPIExamples
   baseURL: https://{clustered_node_ip}/rest/v1
   tags:
@@ -126,7 +66,387 @@ apis:
     url: https://github.com/ScaleComputing/RestAPIExamples
   - type: Documentation
     url: https://scalecomputing.github.io/HyperCoreAnsibleCollection/
+- aid: scale-computing:scale-computing-api-keys-api
+  name: Scale Computing API Keys API
+  description: Manage Fleet Manager API access independently of users
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - api-keys
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-api-keys-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-clusters-api
+  name: Scale Computing Clusters API
+  description: The Clusters API from Scale Computing — 10 operation(s) for clusters.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Clusters
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-clusters-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-conditions-api
+  name: Scale Computing Conditions API
+  description: Issues reported by SC//HyperCore clusters
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - conditions
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-conditions-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-health-api
+  name: Scale Computing Health API
+  description: The Health API from Scale Computing — 1 operation(s) for health.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-health-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-metrics-api
+  name: Scale Computing Metrics API
+  description: Historical tracking of CPU, RAM and Storage metrics across your fleet
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-metrics-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-nodes-api
+  name: Scale Computing Nodes API
+  description: The Nodes API from Scale Computing — 5 operation(s) for nodes.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Nodes
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-nodes-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-organization-activities-api
+  name: Scale Computing Organization Activities API
+  description: Audit log of many user and system-generated events in Fleet Manager
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - organization-activities
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-organization-activities-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-organization-api
+  name: Scale Computing Organization API
+  description: The Organization API from Scale Computing — 2 operation(s) for organization.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Organization
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-organization-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-organization-salesforce-account-api
+  name: Scale Computing Organization Salesforce Account API
+  description: >-
+    The Organization Salesforce Account API from Scale Computing — 1 operation(s) for organization salesforce
+    account.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Organization Salesforce Account
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-organization-salesforce-account-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-organizationroles-api
+  name: Scale Computing Organization Roles API
+  description: The OrganizationRoles API from Scale Computing — 2 operation(s) for organizationroles.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - OrganizationRoles
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-organizationroles-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-organizations-api
+  name: Scale Computing Organizations API
+  description: The Organizations API from Scale Computing — 4 operation(s) for organizations.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-organizations-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-organizationuser-api
+  name: Scale Computing Organization User API
+  description: The OrganizationUser API from Scale Computing — 1 operation(s) for organizationuser.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - OrganizationUser
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-organizationuser-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-organizationusers-api
+  name: Scale Computing Organization Users API
+  description: The OrganizationUsers API from Scale Computing — 1 operation(s) for organizationusers.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - OrganizationUsers
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-organizationusers-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-salesforce-api
+  name: Scale Computing Salesforce API
+  description: The Salesforce API from Scale Computing — 1 operation(s) for salesforce.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Salesforce
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-salesforce-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-staged-clusters-api
+  name: Scale Computing Staged Clusters API
+  description: The Staged Clusters API from Scale Computing — 4 operation(s) for staged clusters.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Staged Clusters
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-staged-clusters-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-users-api
+  name: Scale Computing Users API
+  description: The Users API from Scale Computing — 13 operation(s) for users.
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-users-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
+- aid: scale-computing:scale-computing-vms-api
+  name: Scale Computing Vms API
+  description: Virtual Machines on SC//HyperCore clusters
+  humanURL: https://api.scalecomputing.com/api/v2
+  baseURL: https://api.scalecomputing.com
+  tags:
+  - vms
+  properties:
+  - type: OpenAPI
+    url: openapi/scale-computing-vms-api-openapi.yml
+  - type: APIReference
+    url: https://api.scalecomputing.com/api/v2
+  - type: Documentation
+    url: https://api.scalecomputing.com/api/v2
+  - type: Authentication
+    url: authentication/scale-computing-authentication.yml
+  - type: Conventions
+    url: conventions/scale-computing-conventions.yml
+  - type: ErrorCatalog
+    url: errors/scale-computing-problem-types.yml
+  - type: DataModel
+    url: data-model/scale-computing-data-model.yml
 common:
+- type: Overlay
+  url: overlays/scale-computing-fleet-manager-overlay.yaml
+- type: Overlay
+  url: overlays/scale-computing-core-overlay.yaml
 - type: DomainSecurity
   url: security/scale-computing-domain-security.yml
 - type: Website
