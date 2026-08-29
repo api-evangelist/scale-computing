@@ -12,6 +12,17 @@ description: >-
   collection and Terraform provider for HyperCore, publishes REST API example scripts on GitHub, and defines a
   JSON Schema for Fleet Manager application manifests used by its edge application lifecycle management feature.
 url: https://raw.githubusercontent.com/api-evangelist/scale-computing/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://www.scalecomputing.com/asset-transforms/_1200x630_letterbox_center-center_82_none/scale-computing-logo.png?mtime=1778613063
 x-type: company
 x-source: harvest:secondary-market
