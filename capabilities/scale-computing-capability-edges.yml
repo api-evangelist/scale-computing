@@ -1,0 +1,47 @@
+slug: scale-computing
+provider: Scale Computing
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Automotive & Mobility
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Clusters
+  spec_file: scale-computing-clusters-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.78
+  evidence: GET /api/v2/clusters  ClustersController_findAll  Get a list of clusters; POST /api/v1/clusters/{clusterId}/command  ClusterCommandSend;
+    schemas ClusterHeatlh, ClusterUpdateStatus
+  reason: Lifecycle, health, update status, remote command, tunnel and migration operations over hyperconverged
+    compute/storage clusters — management of compute infrastructure estate. Some overlap with IT operations
+    monitoring, hence not maximal confidence.
+- tag: Nodes
+  spec_file: scale-computing-nodes-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.72
+  evidence: POST /api/v1/nodes  CreateNode; POST /api/v1/nodes/asset  CreateNodeAsset; schemas HardwareCollectorData,
+    NodeData
+  reason: Registration, retrieval, update, fleet sync and certificate issuance for physical appliance
+    nodes with hardware collector data — management of compute infrastructure assets. Certificate request
+    is ancillary plumbing.
+- tag: vms
+  spec_file: scale-computing-vms-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.72
+  evidence: GET /api/v2/vms  VmController_findAll  Get a list of virtual machines
+  reason: Operations enumerate and inspect virtual machines managed by SC//Fleet Manager across HyperCore
+    clusters, i.e. visibility over compute infrastructure, which is IT Infrastructure Management. Read-only
+    inventory scope keeps confidence moderate.

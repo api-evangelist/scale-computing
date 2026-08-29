@@ -454,6 +454,9 @@ apis:
   - type: DataModel
     url: data-model/scale-computing-data-model.yml
 common:
+- type: CapabilityMap
+  url: capabilities/scale-computing-capability-edges.yml
+  name: Scale Computing Business Capability Map
 - type: Overlay
   url: overlays/scale-computing-fleet-manager-overlay.yaml
 - type: Overlay
