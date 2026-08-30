@@ -1,0 +1,31 @@
+openapi: 3.2.0
+info:
+  title: SC//Fleet Manager Health API
+  description: 'The [OpenAPI Specification JSON Schema](https://api.scalecomputing.com/api/v2/openapi.json) can be imported into the API tool of your choice, such as Postman or Insomnia.
+
+
+    This REST API allows programmatic role-based access to your SC//Fleet Manager data. Use the "Authorize" button to input API Keys [created in Fleet Manager](https://fleet.scalecomputing.com/organization/settings) and try out the API directly from your browser. Note: Each endpoint is role restricted in alignment with the UI access levels, which are detailed in the Fleet Manager [User Guide](https://scalecomputing.my.salesforce.com/sfc/p/#700000008AKW/a/4u0000019yBV/BT9qsos01XIXnbP85uBMLHE5AbtdRBhhxxjxGl3OCIU).'
+  version: '2.0'
+  contact: {}
+servers:
+- url: https://api.scalecomputing.com
+  description: Fleet Manager API
+tags:
+- name: Health
+  description: ''
+paths:
+  /health:
+    get:
+      operationId: HealthController_check
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - Health
+components:
+  securitySchemes:
+    API_Key:
+      type: apiKey
+      in: header
+      name: api-key

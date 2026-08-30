@@ -1,0 +1,1107 @@
+openapi: 3.2.0
+info:
+  title: Scale Computing Clusters API
+  contact: {}
+  version: '1.0'
+  description: 'Operations tagged Clusters across 2 of this provider''s published API definitions: scale-computing-core-openapi.json, scale-computing-fleet-manager-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /
+- url: https://api.scalecomputing.com
+  description: Fleet Manager API
+tags:
+- name: Clusters
+paths:
+  /api/v1/clusters/{clusterId}:
+    get:
+      operationId: GetCluster
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:read:*
+      parameters:
+      - in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+      tags:
+      - Clusters
+    delete:
+      operationId: DeleteCluster
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:delete:*
+      parameters:
+      - in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+      tags:
+      - Clusters
+    put:
+      operationId: UpdateCluster
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:update:*
+      parameters:
+      - in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+      tags:
+      - Clusters
+    servers:
+    - url: /
+  /api/v1/clusters:
+    get:
+      operationId: GetClusters
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Cluster'
+                type: array
+      security:
+      - jwt:
+        - cluster:read:*
+      parameters:
+      - in: query
+        name: filters
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: projections
+        required: false
+        schema:
+          type: string
+      tags:
+      - Clusters
+    servers:
+    - url: /
+  /api/v1/clusters/{clusterId}/stream/start:
+    post:
+      operationId: StartClusterStream
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Boolean'
+      security:
+      - jwt:
+        - cluster:read:*
+      parameters:
+      - in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                autoStopSeconds:
+                  type: number
+                  format: double
+                intervalMS:
+                  type: number
+                  format: double
+              type: object
+      tags:
+      - Clusters
+    servers:
+    - url: /
+  /api/v1/clusters/{clusterId}/command:
+    post:
+      operationId: ClusterCommandSend
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: boolean
+      description: Create a command request.
+      security:
+      - jwt:
+        - cluster:update:*
+      parameters:
+      - in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                payload:
+                  additionalProperties: true
+                  type: object
+                command:
+                  type: string
+              required:
+              - payload
+              - command
+              type: object
+      tags:
+      - Clusters
+    servers:
+    - url: /
+  /api/v1/clusters/{clusterId}/tunnel:
+    post:
+      operationId: StartTunnel
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - secureLink:read:*
+      parameters:
+      - in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                force:
+                  type: boolean
+                useUuid:
+                  type: boolean
+                additionalRouteArgs:
+                  $ref: '#/components/schemas/AdditionalRouteArgs'
+              required:
+              - additionalRouteArgs
+              type: object
+      tags:
+      - Clusters
+    get:
+      operationId: ViewTunnel
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - secureLink:read:*
+      parameters:
+      - in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+      tags:
+      - Clusters
+    servers:
+    - url: /
+  /api/v1/clusters/migrate:
+    post:
+      operationId: Migrate
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - clusterMigration:create:*
+      parameters: []
+      tags:
+      - Clusters
+    servers:
+    - url: /
+  /api/v2/clusters:
+    get:
+      operationId: ClustersController_findAll
+      parameters:
+      - name: query
+        required: false
+        in: query
+        schema:
+          type: string
+          default: ''
+      - name: offset
+        required: false
+        in: query
+        schema:
+          default: 0
+          type: number
+          minimum: 0
+      - name: limit
+        required: false
+        in: query
+        description: limit is defaulted to 20 if not passed. The value can range between 1-200.
+        schema:
+          default: 20
+          type: number
+          minimum: 1
+          maximum: 200
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ClusterDto'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestException'
+      security:
+      - API Key: []
+      summary: Get a list of clusters
+      tags:
+      - Clusters
+    servers:
+    - url: https://api.scalecomputing.com
+      description: Fleet Manager API
+  /api/v2/clusters/download:
+    get:
+      operationId: ClustersController_downloadCsv
+      parameters: []
+      responses:
+        '200':
+          description: Sample response of downloading csv data of clusters
+          content:
+            text/csv:
+              schema:
+                type: string
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestException'
+      security:
+      - API Key: []
+      summary: Get a .csv of clusters
+      tags:
+      - Clusters
+    servers:
+    - url: https://api.scalecomputing.com
+      description: Fleet Manager API
+  /api/v2/clusters/{id}:
+    get:
+      operationId: ClustersController_findOne
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterDto'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestException'
+      security:
+      - API Key: []
+      summary: Get a specific cluster by Id
+      tags:
+      - Clusters
+    servers:
+    - url: https://api.scalecomputing.com
+      description: Fleet Manager API
+  /api/v2/clusters/{id}/tags:
+    post:
+      operationId: ClustersController_upsertClusterTags
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/'
+            examples:
+              sample1:
+                description: sample request body payload for tags
+                value:
+                  tags: foo, bar, baz
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ClusterDto'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestException'
+      security:
+      - API Key: []
+      summary: Overwrite the existing cluster tags with the provided comma-separated list of tags
+      tags:
+      - Clusters
+    servers:
+    - url: https://api.scalecomputing.com
+      description: Fleet Manager API
+components:
+  schemas:
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    Partial_ClusterData_:
+      properties:
+        uuid:
+          type: string
+        name:
+          type: string
+        version:
+          type: string
+        restApiEnabled:
+          type: boolean
+        updates:
+          properties:
+            status:
+              $ref: '#/components/schemas/ClusterUpdateStatus'
+            available:
+              items:
+                $ref: '#/components/schemas/ClusterDataAvailableUpdate'
+              type: array
+          required:
+          - status
+          - available
+          type: object
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        meta:
+          properties:
+            tunnel:
+              properties:
+                error_code:
+                  type:
+                  - string
+                  - 'null'
+                error:
+                  type:
+                  - string
+                  - 'null'
+                state:
+                  type: string
+              required:
+              - error_code
+              - error
+              - state
+              type: object
+            conditionCounts:
+              properties:
+                info:
+                  type: number
+                  format: double
+                notice:
+                  type: number
+                  format: double
+                warning:
+                  type: number
+                  format: double
+                critical:
+                  type: number
+                  format: double
+              required:
+              - info
+              - notice
+              - warning
+              - critical
+              type: object
+            conditions:
+              items: {}
+              type: array
+            vms:
+              items:
+                properties:
+                  tags:
+                    items:
+                      type: string
+                    type: array
+                  stats:
+                    properties:
+                      cpuUsage:
+                        type: number
+                        format: double
+                    required:
+                    - cpuUsage
+                    type: object
+                  netDevs:
+                    items:
+                      properties:
+                        ipv4Addresses:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - ipv4Addresses
+                      type: object
+                    type: array
+                  numVCPU:
+                    type: number
+                    format: double
+                  mem:
+                    type: number
+                    format: double
+                  driveCapacity:
+                    type: number
+                    format: double
+                  driveAllocation:
+                    type: number
+                    format: double
+                  description:
+                    type: string
+                  state:
+                    type: number
+                    format: double
+                  name:
+                    type: string
+                  uuid:
+                    type: string
+                required:
+                - tags
+                - stats
+                - netDevs
+                - numVCPU
+                - mem
+                - driveCapacity
+                - driveAllocation
+                - description
+                - state
+                - name
+                - uuid
+                type: object
+              type: array
+            vmSummary:
+              properties:
+                running:
+                  type: number
+                  format: double
+                total:
+                  type: number
+                  format: double
+              required:
+              - running
+              - total
+              type: object
+            vmCount:
+              type: number
+              format: double
+            nodeSummary:
+              properties:
+                diskLatency:
+                  properties:
+                    us:
+                      type: number
+                      format: double
+                  required:
+                  - us
+                  type: object
+                cpu:
+                  properties:
+                    percent:
+                      type: number
+                      format: double
+                  required:
+                  - percent
+                  type: object
+                memory:
+                  properties:
+                    percent:
+                      type: number
+                      format: double
+                    used:
+                      type: number
+                      format: double
+                    available:
+                      type: number
+                      format: double
+                  required:
+                  - percent
+                  - used
+                  - available
+                  type: object
+                storage:
+                  properties:
+                    percent:
+                      type: number
+                      format: double
+                    used:
+                      type: number
+                      format: double
+                    available:
+                      type: number
+                      format: double
+                  required:
+                  - percent
+                  - used
+                  - available
+                  type: object
+              required:
+              - diskLatency
+              - cpu
+              - memory
+              - storage
+              type: object
+            nodes:
+              items: {}
+              type: array
+            nodeCount:
+              type: number
+              format: double
+          required:
+          - tunnel
+          - conditionCounts
+          - conditions
+          - vms
+          - vmSummary
+          - vmCount
+          - nodeSummary
+          - nodes
+          - nodeCount
+          type: object
+        compatibilities:
+          properties:
+            tunnel:
+              properties:
+                version:
+                  type: number
+                  format: double
+              required:
+              - version
+              type: object
+          type: object
+      type: object
+      description: Make all properties in T optional
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: true
+    Cluster:
+      properties:
+        _id:
+          type: string
+        uuid:
+          type: string
+        name:
+          type: string
+        leaderNode:
+          type: string
+        leaderNodeLanIp:
+          type: string
+        organizationId:
+          type: string
+        enabled:
+          type: boolean
+        isSimulated:
+          type: boolean
+        simulationBatchId:
+          type: string
+        onlineStatus:
+          $ref: '#/components/schemas/OnlineStatus'
+        health:
+          $ref: '#/components/schemas/ClusterHeatlh'
+        tags:
+          items:
+            type: string
+          type: array
+        data:
+          $ref: '#/components/schemas/Partial_ClusterData_'
+        collectors:
+          properties: {}
+          type: object
+        lastCheckin:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        createdAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        deletedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - _id
+      - uuid
+      - leaderNode
+      - organizationId
+      - enabled
+      - isSimulated
+      - simulationBatchId
+      - onlineStatus
+      - health
+      - tags
+      - collectors
+      - createdAt
+      - deletedAt
+      type: object
+      additionalProperties: true
+    ClusterHeatlh:
+      properties:
+        score:
+          type: number
+          format: double
+        state:
+          $ref: '#/components/schemas/HealthState'
+      required:
+      - score
+      - state
+      type: object
+    AdditionalRouteArgs:
+      properties:
+        query:
+          $ref: '#/components/schemas/Record_string.string_'
+        path:
+          type: string
+      required:
+      - query
+      - path
+      type: object
+    Boolean:
+      properties: {}
+      type: object
+      additionalProperties: true
+    OnlineStatus:
+      enum:
+      - online
+      - offline
+      type: string
+    ClusterDataAvailableUpdate:
+      properties:
+        timestamp:
+          type: number
+          format: double
+        revision:
+          type: number
+          format: double
+        minorVersion:
+          type: number
+          format: double
+        majorVersion:
+          type: number
+          format: double
+        buildID:
+          type: number
+          format: double
+        changelog:
+          type: string
+        description:
+          type: string
+        uuid:
+          type: string
+      required:
+      - timestamp
+      - revision
+      - minorVersion
+      - majorVersion
+      - buildID
+      - changelog
+      - description
+      - uuid
+      type: object
+    ClusterUpdateStatus:
+      properties:
+        failNotes:
+          type: string
+        toBuild:
+          type:
+          - number
+          - 'null'
+          format: double
+        toVersion:
+          type:
+          - string
+          - 'null'
+        percent:
+          type: number
+          format: double
+        message:
+          type: string
+        state:
+          type: string
+        isUpdating:
+          type: boolean
+      required:
+      - percent
+      - message
+      - state
+      - isUpdating
+      type: object
+    HealthState:
+      enum:
+      - healthy
+      - disconnected
+      - connecting
+      - critical
+      - warning
+      - notice
+      - info
+      type: string
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
+    ClusterDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          exclude: true
+        name:
+          type: string
+          example: Scale01 Single Node
+        organizationId:
+          type:
+          - string
+          - 'null'
+          example: 61ab80248069550014d7c775
+          exclude: true
+        nodeCount:
+          type:
+          - number
+          - 'null'
+          example: '3'
+        version:
+          type:
+          - string
+          - 'null'
+          example: 1.2.3
+        storagePercent:
+          type:
+          - number
+          - 'null'
+          example: '52'
+        memoryPercent:
+          type:
+          - number
+          - 'null'
+          example: '43'
+        cpuPercent:
+          type:
+          - number
+          - 'null'
+          example: '77'
+        healthScore:
+          type:
+          - number
+          - 'null'
+          example: '7'
+        healthState:
+          type:
+          - string
+          - 'null'
+          example: healthy
+        vmRunning:
+          type:
+          - number
+          - 'null'
+          example: '3'
+        vmTotal:
+          type:
+          - number
+          - 'null'
+          example: '4'
+        tags:
+          type:
+          - string
+          - 'null'
+          example: foo, bar, baz
+        lastCheckin:
+          type:
+          - date
+          - 'null'
+          default: null
+          example: '2026-08-25T03:23:15.739Z'
+          exclude: true
+        leaderNodeLanIp:
+          type:
+          - string
+          - 'null'
+          example: 127.0.0.1
+        leaderNode:
+          type:
+          - string
+          - 'null'
+          exclude: true
+        onlineStatus:
+          type:
+          - string
+          - 'null'
+        updatesAvailable:
+          type:
+          - boolean
+          - 'null'
+          exclude: true
+        updatesAvailableOptions:
+          exclude: true
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/UpdatesAvailableOptionDto'
+        updatesStatus:
+          exclude: true
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/UpdateStatusDto'
+        createdAt:
+          type: date
+          example: '2026-08-25T03:23:15.740Z'
+        updatedAt:
+          type: date
+          example: '2026-08-25T03:23:15.740Z'
+        cluster:
+          type:
+          - object
+          - 'null'
+      required:
+      - id
+      - name
+      - createdAt
+      - updatedAt
+    UpdateStatusDto:
+      type: object
+      properties:
+        isUpdating:
+          type: boolean
+          description: Whether the system is updating
+          example: false
+        state:
+          type: string
+          description: The current state of the update process
+          example: COMPLETE
+        message:
+          type: string
+          description: Message related to the update process
+          example: ''
+        percent:
+          type: number
+          description: Percentage of completion
+          example: 0
+        toVersion:
+          type:
+          - string
+          - 'null'
+          description: Version the cluster is updating to
+          example: 9.4.18.218440
+        toBuild:
+          type:
+          - number
+          - 'null'
+          description: Build the cluster is updating to
+          example: 218440
+        failNotes:
+          type: string
+          description: Node-provided guidance on what must be fixed before retrying a failed update
+          example: ''
+      required:
+      - isUpdating
+      - state
+      - message
+      - percent
+    UpdatesAvailableOptionDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: The unique identifier of the update option
+          example: 9.4.23.216736
+        description:
+          type: string
+          description: Description of the update
+          example: release 9.4.23.216736
+        changeLog:
+          type: string
+          description: Change log for the update
+          example: release 9.4.23.216736 - <a href="https://example.com">link</a>
+        buildID:
+          type: number
+          description: Build ID of the update
+          example: 216736
+        majorVersion:
+          type: number
+          description: Major version number
+          example: 9
+        minorVersion:
+          type: number
+          description: Minor version number
+          example: 4
+        revision:
+          type: number
+          description: Revision number
+          example: 23
+        timestamp:
+          type: number
+          description: Timestamp of the update
+          example: 1734552304
+      required:
+      - uuid
+      - description
+      - changeLog
+      - buildID
+      - majorVersion
+      - minorVersion
+      - revision
+      - timestamp
+    PageDto:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
+      required:
+      - meta
+      - items
+    BadRequestException:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
+      required:
+      - statusCode
+      - message
+      - error
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}
+    API_Key:
+      type: apiKey
+      in: header
+      name: api-key
+x-refined-from:
+- scale-computing-core-openapi.json
+- scale-computing-fleet-manager-openapi.json

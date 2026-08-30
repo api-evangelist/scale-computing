@@ -1,0 +1,86 @@
+openapi: 3.2.0
+info:
+  title: core Organization API
+  version: 1.0.0
+  license:
+    name: ISC
+  contact: {}
+servers:
+- url: /
+tags:
+- name: Organization
+paths:
+  /api/v1/organization/invite-user:
+    post:
+      operationId: InviteOrganizationUser
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: boolean
+      security:
+      - jwt:
+        - organizationUser:create:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                provider:
+                  type: string
+                role:
+                  type: string
+                email:
+                  type: string
+              required:
+              - provider
+              - role
+              - email
+              type: object
+      tags:
+      - Organization
+  /api/v1/organization/reinvite-user:
+    post:
+      operationId: ReinviteOrganizationUser
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: boolean
+      security:
+      - jwt:
+        - organizationUser:read:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                provider:
+                  type: string
+                role:
+                  type: string
+                email:
+                  type: string
+              required:
+              - provider
+              - role
+              - email
+              type: object
+      tags:
+      - Organization
+components:
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}

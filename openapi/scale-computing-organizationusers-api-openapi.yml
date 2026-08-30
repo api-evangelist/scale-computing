@@ -1,0 +1,142 @@
+openapi: 3.2.0
+info:
+  title: core Organization Users API
+  version: 1.0.0
+  license:
+    name: ISC
+  contact: {}
+servers:
+- url: /
+tags:
+- name: OrganizationUsers
+paths:
+  /api/v1/organizationUsers:
+    get:
+      operationId: GetOrganizationUsers
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+      security:
+      - jwt:
+        - organizationUser:read:*
+      parameters: []
+      tags:
+      - OrganizationUsers
+    put:
+      operationId: UpdateOrganizationUser
+      responses:
+        '204':
+          description: No content
+      security:
+      - jwt:
+        - organizationUser:update:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                providerId:
+                  type: string
+                roleId:
+                  type: string
+                userId:
+                  type: string
+              required:
+              - providerId
+              - roleId
+              - userId
+              type: object
+      tags:
+      - OrganizationUsers
+    delete:
+      operationId: RemoveOrganizationUser
+      responses:
+        '204':
+          description: No content
+      security:
+      - jwt:
+        - organizationUser:delete:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: string
+              required:
+              - userId
+              type: object
+      tags:
+      - OrganizationUsers
+components:
+  schemas:
+    User:
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        displayName:
+          type: string
+        verifiedOn:
+          type: string
+          format: date-time
+        picture:
+          type: string
+        scaleAdminRole:
+          type: string
+        eulaAccepted:
+          type: number
+          format: double
+        resetPassword:
+          properties:
+            code:
+              type: string
+            link:
+              type: string
+          required:
+          - code
+          - link
+          type: object
+        inviteToken:
+          type:
+          - string
+          - 'null'
+        inviteIssued:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        providerId:
+          type: string
+      required:
+      - _id
+      - email
+      - displayName
+      - verifiedOn
+      - picture
+      - scaleAdminRole
+      - eulaAccepted
+      - resetPassword
+      - inviteToken
+      - inviteIssued
+      - providerId
+      type: object
+      additionalProperties: true
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}

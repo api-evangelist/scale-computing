@@ -1,0 +1,248 @@
+openapi: 3.2.0
+info:
+  title: core Staged Clusters API
+  version: 1.0.0
+  license:
+    name: ISC
+  contact: {}
+servers:
+- url: /
+tags:
+- name: Staged Clusters
+paths:
+  /api/v1/staged-clusters/{id}:
+    get:
+      operationId: GetStagedCluster
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:read:*
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      tags:
+      - Staged Clusters
+    delete:
+      operationId: RemoveStagedCluster
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:delete:*
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      tags:
+      - Staged Clusters
+  /api/v1/staged-clusters:
+    get:
+      operationId: GetStagedClusters
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:read:*
+      parameters: []
+      tags:
+      - Staged Clusters
+    post:
+      operationId: CreateStagedCluster
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:create:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StagedClusterCreateParams'
+      tags:
+      - Staged Clusters
+  /api/v1/staged-clusters/{id}/update:
+    post:
+      operationId: UpdateStagedCluster
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:update:*
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StagedClusterCreateParams'
+      tags:
+      - Staged Clusters
+  /api/v1/staged-clusters/{id}/resend-config:
+    post:
+      operationId: ResendClusterConfig
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - cluster:update:*
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      tags:
+      - Staged Clusters
+components:
+  schemas:
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
+    StagedClusterCreateParams:
+      properties:
+        clusterName:
+          type: string
+        lanNetmask:
+          type: string
+        lanGateway:
+          type: string
+        backplaneNetmask:
+          type: string
+        backplaneVLANID:
+          type: number
+          format: double
+        initializingNode:
+          type: string
+        dnsIP:
+          type: string
+        priority:
+          type: number
+          format: double
+        nodes:
+          items:
+            properties:
+              bypassNetworkCheck:
+                type: string
+              serialNumber:
+                type: string
+              softwareSerialNumber:
+                type: string
+              backplaneIP:
+                type: string
+              lanIP:
+                type: string
+              name:
+                type: string
+              modelNumber:
+                type: string
+              uuid:
+                type: string
+              id:
+                type: string
+            required:
+            - bypassNetworkCheck
+            - serialNumber
+            - softwareSerialNumber
+            - backplaneIP
+            - lanIP
+            - name
+            - modelNumber
+            - uuid
+            - id
+            type: object
+          type: array
+      required:
+      - clusterName
+      - lanNetmask
+      - lanGateway
+      - backplaneNetmask
+      - backplaneVLANID
+      - nodes
+      type: object
+      additionalProperties: true
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: true
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}

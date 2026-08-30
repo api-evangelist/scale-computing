@@ -1,0 +1,189 @@
+openapi: 3.2.0
+info:
+  title: core Organization Roles API
+  version: 1.0.0
+  license:
+    name: ISC
+  contact: {}
+servers:
+- url: /
+tags:
+- name: OrganizationRoles
+paths:
+  /api/v1/organizationRoles:
+    post:
+      operationId: CreateOrganizationRole
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationRole'
+      security:
+      - jwt:
+        - organizationRole:create:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                roles:
+                  items:
+                    type: string
+                  type: array
+                description:
+                  type: string
+                name:
+                  type: string
+              required:
+              - roles
+              - description
+              - name
+              type: object
+      tags:
+      - OrganizationRoles
+    get:
+      operationId: GetOrganizationRoles
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/OrganizationRole'
+                type: array
+      security:
+      - jwt:
+        - organizationRole:read:*
+      parameters: []
+      tags:
+      - OrganizationRoles
+    delete:
+      operationId: DeleteOrganizationRole
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: boolean
+      security:
+      - jwt:
+        - organizationRole:delete:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                roleId:
+                  type: string
+              required:
+              - roleId
+              type: object
+      tags:
+      - OrganizationRoles
+  /api/v1/organizationRoles/{roleId}:
+    get:
+      operationId: GetOrganizationRole
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationRole'
+      security:
+      - jwt:
+        - organizationRole:read:*
+      parameters:
+      - in: path
+        name: roleId
+        required: true
+        schema:
+          type: string
+      tags:
+      - OrganizationRoles
+    put:
+      operationId: UpdateOrganizationRole
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: boolean
+      security:
+      - jwt:
+        - organizationRole:update:*
+      parameters:
+      - in: path
+        name: roleId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                roles:
+                  items:
+                    type: string
+                  type: array
+                description:
+                  type: string
+                name:
+                  type: string
+              required:
+              - roles
+              - description
+              - name
+              type: object
+      tags:
+      - OrganizationRoles
+components:
+  schemas:
+    OrganizationRole:
+      properties:
+        _id:
+          type: string
+        organizationId:
+          type: string
+        roleId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        roles:
+          items:
+            type: string
+          type: array
+        permissions:
+          items:
+            type: string
+          type: array
+      required:
+      - _id
+      - organizationId
+      - roleId
+      - name
+      - description
+      - roles
+      - permissions
+      type: object
+      additionalProperties: true
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}

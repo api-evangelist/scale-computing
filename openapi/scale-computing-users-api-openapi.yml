@@ -1,0 +1,630 @@
+openapi: 3.2.0
+info:
+  title: core Users API
+  version: 1.0.0
+  license:
+    name: ISC
+  contact: {}
+servers:
+- url: /
+tags:
+- name: Users
+paths:
+  /api/v1/users/me:
+    get:
+      operationId: AuthenticateUser
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+      - jwt: []
+      parameters: []
+      tags:
+      - Users
+  /api/v1/users/me/updateProvider:
+    post:
+      operationId: UpdateProvider
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                provider:
+                  type: string
+              required:
+              - provider
+              type: object
+      tags:
+      - Users
+  /api/v1/users/me/signup:
+    post:
+      operationId: SignUp
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  organization:
+                    $ref: '#/components/schemas/Organization'
+                  user:
+                    $ref: '#/components/schemas/User'
+                required:
+                - organization
+                - user
+                type: object
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                email:
+                  type: string
+                organizationName:
+                  type: string
+              required:
+              - password
+              - email
+              - organizationName
+              type: object
+      tags:
+      - Users
+  /api/v1/users/me/sendResetPasswordEmail:
+    post:
+      operationId: SendResetPasswordEmail
+      responses:
+        '204':
+          description: No content
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+              required:
+              - email
+              type: object
+      tags:
+      - Users
+  /api/v1/users/me/resetPassword:
+    post:
+      operationId: ResetPassword
+      responses:
+        '204':
+          description: No content
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                code:
+                  type: string
+                email:
+                  type: string
+              required:
+              - password
+              - code
+              - email
+              type: object
+      tags:
+      - Users
+  /api/v1/users/me/access-token:
+    post:
+      operationId: CreateAccessToken
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+              type: object
+      tags:
+      - Users
+  /api/v1/users/me/granted:
+    get:
+      operationId: CheckIsGranted
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt: []
+      parameters:
+      - in: query
+        name: scope
+        required: true
+        schema:
+          type: string
+      tags:
+      - Users
+  /api/v1/users/me/organizations:
+    get:
+      operationId: GetAuthenticatedUserOrganizations
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Organization'
+                type: array
+      security:
+      - jwt: []
+      parameters: []
+      tags:
+      - Users
+  /api/v1/users/eula:
+    post:
+      operationId: AcceptEula
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                  eulaAccepted:
+                    type: number
+                    format: double
+                required:
+                - eulaAccepted
+                type: object
+      security:
+      - jwt: []
+      parameters: []
+      tags:
+      - Users
+  /api/v1/users/me/verifyInviteToken:
+    post:
+      operationId: VerifyInviteToken
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                token:
+                  type: string
+                email:
+                  type: string
+              required:
+              - token
+              - email
+              type: object
+      tags:
+      - Users
+  /api/v1/users/admin/all:
+    get:
+      operationId: AdminGetAllUsers
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AdminUserListResult'
+                type: array
+      security:
+      - jwt: []
+      parameters: []
+      tags:
+      - Users
+  /api/v1/users/admin/{userId}:
+    get:
+      operationId: AdminGetUser
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserDetailResult'
+      security:
+      - jwt: []
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      tags:
+      - Users
+  /api/v1/users/auth/deleteAuth:
+    delete:
+      operationId: DeleteAuth
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt: []
+      parameters: []
+      tags:
+      - Users
+components:
+  schemas:
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    VersionCounts:
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
+      type: object
+    User:
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        displayName:
+          type: string
+        verifiedOn:
+          type: string
+          format: date-time
+        picture:
+          type: string
+        scaleAdminRole:
+          type: string
+        eulaAccepted:
+          type: number
+          format: double
+        resetPassword:
+          properties:
+            code:
+              type: string
+            link:
+              type: string
+          required:
+          - code
+          - link
+          type: object
+        inviteToken:
+          type:
+          - string
+          - 'null'
+        inviteIssued:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        providerId:
+          type: string
+      required:
+      - _id
+      - email
+      - displayName
+      - verifiedOn
+      - picture
+      - scaleAdminRole
+      - eulaAccepted
+      - resetPassword
+      - inviteToken
+      - inviteIssued
+      - providerId
+      type: object
+      additionalProperties: true
+    AdminUserDetailResult:
+      properties:
+        userId:
+          type: string
+        email:
+          type: string
+        providerId:
+          type:
+          - string
+          - 'null'
+        scaleAdminRole:
+          type:
+          - string
+          - 'null'
+        verifiedOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        inviteIssued:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        organizations:
+          items:
+            properties:
+              lastAccess:
+                type:
+                - string
+                - 'null'
+                format: date-time
+              providerId:
+                type:
+                - string
+                - 'null'
+              roleName:
+                type: string
+              role:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
+            required:
+            - lastAccess
+            - providerId
+            - roleName
+            - role
+            - name
+            - _id
+            type: object
+          type: array
+      required:
+      - userId
+      - email
+      - providerId
+      - scaleAdminRole
+      - verifiedOn
+      - inviteIssued
+      - organizations
+      type: object
+      additionalProperties: true
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: true
+    Organization:
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        clusterSecretKey:
+          type: string
+        settings:
+          $ref: '#/components/schemas/OrganizationSettings'
+        stats:
+          $ref: '#/components/schemas/OrgnizationStats'
+        salesforce:
+          properties:
+            syncError:
+              type:
+              - string
+              - 'null'
+            syncStatus:
+              type: string
+              enum:
+              - syncing
+              - idle
+              - error
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - syncError
+          - syncStatus
+          - name
+          - id
+          type: object
+        deletedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - _id
+      - name
+      - clusterSecretKey
+      - settings
+      - stats
+      - salesforce
+      - deletedAt
+      - createdAt
+      type: object
+      additionalProperties: true
+    Version:
+      properties:
+        count:
+          type: number
+          format: double
+        label:
+          type: string
+      required:
+      - count
+      - label
+      type: object
+    OrgnizationStats:
+      properties:
+        online:
+          type: number
+          format: double
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
+      required:
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
+      type: object
+      additionalProperties: true
+    AdminUserListResult:
+      properties:
+        userId:
+          type: string
+        email:
+          type: string
+        providerId:
+          type:
+          - string
+          - 'null'
+        scaleAdminRole:
+          type:
+          - string
+          - 'null'
+        verifiedOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        inviteIssued:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - userId
+      - email
+      - providerId
+      - scaleAdminRole
+      - verifiedOn
+      - inviteIssued
+      type: object
+      additionalProperties: true
+    OrganizationSettings:
+      properties:
+        simulationEnabled:
+          type: boolean
+        secureLinkDisabled:
+          type: boolean
+        simulations:
+          properties:
+            totalClustersPerBatch:
+              type: number
+              format: double
+            totalBatches:
+              type: number
+              format: double
+          required:
+          - totalClustersPerBatch
+          - totalBatches
+          type: object
+        monitoring:
+          properties:
+            enabled:
+              type: boolean
+              enum:
+              - false
+          required:
+          - enabled
+          type: object
+      required:
+      - simulationEnabled
+      - secureLinkDisabled
+      - simulations
+      - monitoring
+      type: object
+      additionalProperties: true
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}

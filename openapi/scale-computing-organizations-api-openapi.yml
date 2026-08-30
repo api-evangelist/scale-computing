@@ -1,0 +1,284 @@
+openapi: 3.2.0
+info:
+  title: core Organizations API
+  version: 1.0.0
+  license:
+    name: ISC
+  contact: {}
+servers:
+- url: /
+tags:
+- name: Organizations
+paths:
+  /api/v1/organizations/{organizationId}:
+    get:
+      operationId: GetOrganization
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+      security:
+      - jwt: []
+      parameters:
+      - in: path
+        name: organizationId
+        required: true
+        schema:
+          type: string
+      tags:
+      - Organizations
+    delete:
+      operationId: RemoveOrganization
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+      security:
+      - jwt:
+        - organization:delete:*
+      parameters:
+      - in: path
+        name: organizationId
+        required: true
+        schema:
+          type: string
+      tags:
+      - Organizations
+  /api/v1/organizations:
+    get:
+      operationId: GetAllOrganizations
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Organization'
+                type: array
+      security:
+      - jwt: []
+      parameters: []
+      tags:
+      - Organizations
+    post:
+      operationId: CreateOrganization
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+      security:
+      - jwt:
+        - organization:create:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationCreationParams'
+      tags:
+      - Organizations
+  /api/v1/organizations/sync:
+    post:
+      operationId: SyncOrganizationsToFleet
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: number
+                    format: double
+                  published:
+                    type: number
+                    format: double
+                required:
+                - errors
+                - published
+                type: object
+      security:
+      - jwt:
+        - organization:create:*
+      parameters: []
+      tags:
+      - Organizations
+  /api/v1/organizations/current/secret-key:
+    get:
+      operationId: GetOrganizationSecretKey
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - jwt:
+        - organizationSecretKey:read:*
+      parameters: []
+      tags:
+      - Organizations
+components:
+  schemas:
+    VersionCounts:
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
+      type: object
+    Organization:
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        clusterSecretKey:
+          type: string
+        settings:
+          $ref: '#/components/schemas/OrganizationSettings'
+        stats:
+          $ref: '#/components/schemas/OrgnizationStats'
+        salesforce:
+          properties:
+            syncError:
+              type:
+              - string
+              - 'null'
+            syncStatus:
+              type: string
+              enum:
+              - syncing
+              - idle
+              - error
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - syncError
+          - syncStatus
+          - name
+          - id
+          type: object
+        deletedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - _id
+      - name
+      - clusterSecretKey
+      - settings
+      - stats
+      - salesforce
+      - deletedAt
+      - createdAt
+      type: object
+      additionalProperties: true
+    Version:
+      properties:
+        count:
+          type: number
+          format: double
+        label:
+          type: string
+      required:
+      - count
+      - label
+      type: object
+    OrgnizationStats:
+      properties:
+        online:
+          type: number
+          format: double
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
+      required:
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
+      type: object
+      additionalProperties: true
+    OrganizationSettings:
+      properties:
+        simulationEnabled:
+          type: boolean
+        secureLinkDisabled:
+          type: boolean
+        simulations:
+          properties:
+            totalClustersPerBatch:
+              type: number
+              format: double
+            totalBatches:
+              type: number
+              format: double
+          required:
+          - totalClustersPerBatch
+          - totalBatches
+          type: object
+        monitoring:
+          properties:
+            enabled:
+              type: boolean
+              enum:
+              - false
+          required:
+          - enabled
+          type: object
+      required:
+      - simulationEnabled
+      - secureLinkDisabled
+      - simulations
+      - monitoring
+      type: object
+      additionalProperties: true
+    OrganizationCreationParams:
+      properties:
+        settings:
+          properties:
+            secureLinkDisabled:
+              type: boolean
+          type: object
+        clusterSecretKey: {}
+        addDefaultUser: {}
+        name:
+          type: string
+      required:
+      - name
+      type: object
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}

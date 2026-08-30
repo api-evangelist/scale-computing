@@ -1,0 +1,46 @@
+openapi: 3.2.0
+info:
+  title: core Organization User API
+  version: 1.0.0
+  license:
+    name: ISC
+  contact: {}
+servers:
+- url: /
+tags:
+- name: OrganizationUser
+paths:
+  /api/v1/organizationUser:
+    get:
+      operationId: GetOrganizationUser
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  email:
+                    type: string
+                  organizationId:
+                    type: string
+                  providerId:
+                    type: string
+                required:
+                - email
+                - organizationId
+                - providerId
+                type: object
+      security:
+      - jwt: []
+      parameters: []
+      tags:
+      - OrganizationUser
+components:
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}

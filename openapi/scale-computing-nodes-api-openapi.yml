@@ -1,0 +1,682 @@
+openapi: 3.2.0
+info:
+  title: core Nodes API
+  version: 1.0.0
+  license:
+    name: ISC
+  contact: {}
+servers:
+- url: /
+tags:
+- name: Nodes
+paths:
+  /api/v1/nodes:
+    post:
+      operationId: CreateNode
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/INode'
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                simulationBatchId: {}
+                clusterSecretKey:
+                  type: string
+                hardwareIdentifier:
+                  type: string
+              required:
+              - hardwareIdentifier
+              type: object
+      tags:
+      - Nodes
+    get:
+      operationId: GetNodes
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/INode'
+                type: array
+      security:
+      - jwt:
+        - node:read:*
+      parameters:
+      - in: query
+        name: filters
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: select
+        required: true
+        schema:
+          type: string
+      tags:
+      - Nodes
+  /api/v1/nodes/asset:
+    post:
+      operationId: CreateNodeAsset
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/INode'
+        '422':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - jwt:
+        - asset:create:*
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeAssetPayload'
+      tags:
+      - Nodes
+  /api/v1/nodes/{nodeId}:
+    get:
+      operationId: GetNode
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - jwt:
+        - node:read:*
+      parameters:
+      - in: path
+        name: nodeId
+        required: true
+        schema:
+          type: string
+      tags:
+      - Nodes
+    patch:
+      operationId: UpdateNode
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/INode'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict - Serial number already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: Bad Gateway - Serial could not be saved to asset system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - jwt:
+        - node:update:*
+      parameters:
+      - in: path
+        name: nodeId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    serialNumber:
+                      type: string
+                  required:
+                  - serialNumber
+                  type: object
+              required:
+              - data
+              type: object
+      tags:
+      - Nodes
+  /api/v1/nodes/sync:
+    post:
+      operationId: SyncNodesToFleet
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  skipped:
+                    type: number
+                    format: double
+                  errors:
+                    type: number
+                    format: double
+                  published:
+                    type: number
+                    format: double
+                required:
+                - skipped
+                - errors
+                - published
+                type: object
+      security:
+      - jwt:
+        - nodeMigration:create:*
+      parameters: []
+      tags:
+      - Nodes
+  /api/v1/nodes/certificate:
+    post:
+      operationId: RequestClientCertificate
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: string
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                csr:
+                  type: string
+                registrationCode:
+                  type: string
+                hardwareIdentifier:
+                  type: string
+              required:
+              - csr
+              - registrationCode
+              - hardwareIdentifier
+              type: object
+      tags:
+      - Nodes
+components:
+  schemas:
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    PingCollectorData:
+      properties:
+        interval:
+          type: number
+          format: double
+      required:
+      - interval
+      type: object
+      additionalProperties: true
+    Error:
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        stack:
+          type: string
+      required:
+      - name
+      - message
+      type: object
+      additionalProperties: true
+    INode:
+      properties:
+        _id:
+          type: string
+        hardwareIdentifier:
+          type: string
+        data:
+          $ref: '#/components/schemas/NodeData'
+        organizationId:
+          type: string
+        isSimulated:
+          type: boolean
+        registrationCode:
+          type:
+          - string
+          - 'null'
+        isVerified:
+          type: boolean
+        clusterId:
+          type:
+          - string
+          - 'null'
+        onlineStatus:
+          type: string
+          enum:
+          - pending
+          - offline
+          - online
+        stagedClusterId:
+          type: string
+        cluster:
+          properties:
+            uuid:
+              type: string
+            name:
+              type: string
+          required:
+          - uuid
+          type: object
+        isLeader:
+          type: boolean
+        simulationBatchId:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        lastCheckin:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        collectors:
+          properties:
+            ping:
+              properties:
+                data:
+                  $ref: '#/components/schemas/PingCollectorData'
+                version:
+                  type: number
+                  format: double
+              required:
+              - data
+              - version
+              type: object
+            zeroTouchStatus:
+              properties:
+                data:
+                  $ref: '#/components/schemas/ZeroTouchStatusCollectorData'
+                version:
+                  type: number
+                  format: double
+              required:
+              - data
+              - version
+              type: object
+            secretKey:
+              properties:
+                data:
+                  $ref: '#/components/schemas/SecretKeyCollectorData'
+                version:
+                  type: number
+                  format: double
+              required:
+              - data
+              - version
+              type: object
+            hardware:
+              properties:
+                data:
+                  $ref: '#/components/schemas/HardwareCollectorData'
+                version:
+                  type: number
+                  format: double
+              required:
+              - data
+              - version
+              type: object
+          type: object
+        asset:
+          properties:
+            macAddress:
+              type: string
+              description: From Salesforce MAC_Address__c when present; informational only. UI uses data.macAddress from node check-in.
+            type:
+              type: string
+              description: From Salesforce Type__c when present
+            accountChangedAt:
+              type: string
+              format: date-time
+              description: 'When accountId last transitioned (SF ownership change). The
+
+                displacement heal only trusts secret-key events that originated
+
+                after this moment, so a stale event queued from before the
+
+                transfer can''t re-assert the displaced manual claim (#4831).'
+            accountId:
+              type: string
+              description: Salesforce account ID that owns the asset; for auditing
+            softwareSerialNumber:
+              type: string
+            shipDate:
+              type: string
+            model:
+              type: string
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - softwareSerialNumber
+          - shipDate
+          - model
+          - name
+          - id
+          type: object
+        isDuplicateSerialNumber:
+          type: string
+      required:
+      - _id
+      - hardwareIdentifier
+      - data
+      - organizationId
+      - isSimulated
+      - registrationCode
+      - isVerified
+      - clusterId
+      - onlineStatus
+      - stagedClusterId
+      - cluster
+      - isLeader
+      - simulationBatchId
+      - createdAt
+      - lastCheckin
+      - collectors
+      - isDuplicateSerialNumber
+      type: object
+      additionalProperties: true
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: true
+    HardwareCollectorData:
+      properties:
+        identifier:
+          type: string
+        serialNumber:
+          type: string
+        model:
+          type: string
+        manufacturer:
+          type: string
+        macAddress:
+          type: string
+        firmware:
+          type: string
+      required:
+      - identifier
+      - serialNumber
+      - model
+      - manufacturer
+      - macAddress
+      - firmware
+      type: object
+      additionalProperties: true
+    NodeAssetPayload:
+      properties:
+        asset:
+          properties:
+            softwareSerialNumber:
+              type: string
+            shipDate:
+              type: string
+            model:
+              type: string
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - softwareSerialNumber
+          - shipDate
+          - model
+          - name
+          - id
+          type: object
+        serialNumber:
+          type: string
+        organizationId:
+          type: string
+      required:
+      - asset
+      - serialNumber
+      - organizationId
+      type: object
+    NodeData:
+      properties:
+        ping:
+          properties:
+            interval:
+              type: number
+              format: double
+          required:
+          - interval
+          type: object
+        registration:
+          properties:
+            secretKey:
+              type: string
+          required:
+          - secretKey
+          type: object
+        cluster:
+          properties:
+            uuid:
+              type: string
+          required:
+          - uuid
+          type: object
+        hcOSIdentifier:
+          type: string
+        firmware:
+          type: string
+        macAddress:
+          type: string
+        manufacturer:
+          type: string
+        model:
+          type: string
+        serialNumber:
+          type: string
+        identifier:
+          type: string
+      type: object
+    ZeroTouchStatusCollectorData:
+      properties:
+        state:
+          items:
+            properties:
+              clusterinitialized:
+                type: number
+                enum:
+                - 0
+                - 1
+              allnodesincluster:
+                type: number
+                enum:
+                - 0
+                - 1
+              isinitializingnode:
+                type: number
+                enum:
+                - 0
+                - 1
+              allnodesinitialized:
+                type: number
+                enum:
+                - 0
+                - 1
+              nodeinitcomplete:
+                type: number
+                enum:
+                - 0
+                - 1
+              preexecoverride:
+                type: number
+                enum:
+                - 0
+                - 1
+            required:
+            - clusterinitialized
+            - allnodesincluster
+            - isinitializingnode
+            - allnodesinitialized
+            - nodeinitcomplete
+            - preexecoverride
+            type: object
+          type: array
+        clusterinit:
+          properties:
+            progress:
+              type: string
+            lastFailure:
+              type: string
+            lastAction:
+              type: string
+            message:
+              type: string
+            status:
+              type: string
+            isLeader:
+              type: boolean
+              enum:
+              - true
+          required:
+          - progress
+          - lastFailure
+          - lastAction
+          - message
+          - status
+          - isLeader
+          type: object
+        nodeinit:
+          properties:
+            backplaneIP:
+              type: string
+            initializingNode:
+              type: string
+            progress:
+              type: string
+            lastFailure:
+              type: string
+            lastAction:
+              type: string
+            message:
+              type: string
+            status:
+              type: string
+          required:
+          - backplaneIP
+          - initializingNode
+          - progress
+          - lastFailure
+          - lastAction
+          - message
+          - status
+          type: object
+        nodeStates:
+          items:
+            properties:
+              pinged:
+                type: string
+              nodeInitialized:
+                type: string
+              identifier:
+                type: string
+            required:
+            - pinged
+            - nodeInitialized
+            - identifier
+            type: object
+          type: array
+        sczerotouchIteration:
+          type: number
+          format: double
+      required:
+      - state
+      - clusterinit
+      - nodeinit
+      - nodeStates
+      - sczerotouchIteration
+      type: object
+      additionalProperties: true
+    SecretKeyCollectorData:
+      properties:
+        secretKey:
+          type: string
+      required:
+      - secretKey
+      type: object
+      additionalProperties: true
+  securitySchemes:
+    tsoa_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://swagger.io/api/oauth/dialog
+          scopes: {}
