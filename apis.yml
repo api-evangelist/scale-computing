@@ -30,16 +30,15 @@ specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
-- Edge Computing
-- Hyperconverged Infrastructure
+- edge-computing
+- hyperconverged-infrastructure
 - Virtualization
-- Infrastructure Management
-- Fleet Management
-- Virtual Machines
-- Observability
-- Infrastructure as Code
-- Kubernetes
-- Company
+- infrastructure-management
+- fleet-management
+- virtual-machines
+- observability
+- infrastructure-as-code
+- kubernetes
 tags_raw:
 - edge-computing
 - hyperconverged-infrastructure
@@ -64,9 +63,9 @@ apis:
   baseURL: https://{clustered_node_ip}/rest/v1
   tags:
   - Virtualization
-  - Hyperconverged Infrastructure
-  - Virtual Machines
-  - Infrastructure as Code
+  - hyperconverged-infrastructure
+  - virtual-machines
+  - infrastructure-as-code
   tags_raw:
   - virtualization
   - hyperconverged-infrastructure
@@ -83,6 +82,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - APIKeys
+  tags_raw:
   - api-keys
   properties:
   - type: OpenAPI
@@ -105,6 +106,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - Cluster
+  tags_raw:
   - Clusters
   properties:
   - type: OpenAPI
@@ -127,6 +130,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - Conditions
+  tags_raw:
   - conditions
   properties:
   - type: OpenAPI
@@ -171,6 +176,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - Metrics
+  tags_raw:
   - metrics
   properties:
   - type: OpenAPI
@@ -283,6 +290,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - Organization Roles
+  tags_raw:
   - OrganizationRoles
   properties:
   - type: OpenAPI
@@ -305,6 +314,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -349,6 +360,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - Organization Users
+  tags_raw:
   - OrganizationUsers
   properties:
   - type: OpenAPI
@@ -415,6 +428,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -437,6 +452,8 @@ apis:
   humanURL: https://api.scalecomputing.com/api/v2
   baseURL: https://api.scalecomputing.com
   tags:
+  - VMs
+  tags_raw:
   - vms
   properties:
   - type: OpenAPI
