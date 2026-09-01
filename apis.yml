@@ -30,15 +30,15 @@ specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
-- edge-computing
-- hyperconverged-infrastructure
+- Edge Computing
+- Hyperconverged Infrastructure
 - Virtualization
-- infrastructure-management
-- fleet-management
-- virtual-machines
-- observability
-- infrastructure-as-code
-- kubernetes
+- Infrastructure Management
+- Fleet Management
+- Virtual Machines
+- Observability
+- Infrastructure as Code
+- Kubernetes
 tags_raw:
 - edge-computing
 - hyperconverged-infrastructure
@@ -63,9 +63,9 @@ apis:
   baseURL: https://{clustered_node_ip}/rest/v1
   tags:
   - Virtualization
-  - hyperconverged-infrastructure
-  - virtual-machines
-  - infrastructure-as-code
+  - Hyperconverged Infrastructure
+  - Virtual Machines
+  - Infrastructure as Code
   tags_raw:
   - virtualization
   - hyperconverged-infrastructure
