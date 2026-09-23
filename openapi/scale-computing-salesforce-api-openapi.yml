@@ -31,6 +31,8 @@ paths:
           type: string
       tags:
       - Salesforce
+      summary: Get sales force account
+      x-summary-source: derived
     post:
       operationId: SyncSalesforceAssets
       responses:
@@ -47,6 +49,8 @@ paths:
           type: string
       tags:
       - Salesforce
+      summary: Sync salesforce assets
+      x-summary-source: derived
 components:
   schemas:
     SalesforceAccount:

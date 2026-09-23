@@ -25,6 +25,8 @@ paths:
       parameters: []
       tags:
       - Users
+      summary: Authenticate user
+      x-summary-source: derived
   /api/v1/users/me/updateProvider:
     post:
       operationId: UpdateProvider
@@ -51,6 +53,8 @@ paths:
               type: object
       tags:
       - Users
+      summary: Update provider
+      x-summary-source: derived
   /api/v1/users/me/signup:
     post:
       operationId: SignUp
@@ -90,6 +94,8 @@ paths:
               type: object
       tags:
       - Users
+      summary: Sign up
+      x-summary-source: derived
   /api/v1/users/me/sendResetPasswordEmail:
     post:
       operationId: SendResetPasswordEmail
@@ -111,6 +117,8 @@ paths:
               type: object
       tags:
       - Users
+      summary: Send reset password email
+      x-summary-source: derived
   /api/v1/users/me/resetPassword:
     post:
       operationId: ResetPassword
@@ -138,6 +146,8 @@ paths:
               type: object
       tags:
       - Users
+      summary: Reset password
+      x-summary-source: derived
   /api/v1/users/me/access-token:
     post:
       operationId: CreateAccessToken
@@ -162,6 +172,8 @@ paths:
               type: object
       tags:
       - Users
+      summary: Create access token
+      x-summary-source: derived
   /api/v1/users/me/granted:
     get:
       operationId: CheckIsGranted
@@ -182,6 +194,8 @@ paths:
           type: string
       tags:
       - Users
+      summary: Check is granted
+      x-summary-source: derived
   /api/v1/users/me/organizations:
     get:
       operationId: GetAuthenticatedUserOrganizations
@@ -199,6 +213,8 @@ paths:
       parameters: []
       tags:
       - Users
+      summary: Get authenticated user organizations
+      x-summary-source: derived
   /api/v1/users/eula:
     post:
       operationId: AcceptEula
@@ -222,6 +238,8 @@ paths:
       parameters: []
       tags:
       - Users
+      summary: Accept eula
+      x-summary-source: derived
   /api/v1/users/me/verifyInviteToken:
     post:
       operationId: VerifyInviteToken
@@ -250,6 +268,8 @@ paths:
               type: object
       tags:
       - Users
+      summary: Verify invite token
+      x-summary-source: derived
   /api/v1/users/admin/all:
     get:
       operationId: AdminGetAllUsers
@@ -267,6 +287,8 @@ paths:
       parameters: []
       tags:
       - Users
+      summary: Admin get all users
+      x-summary-source: derived
   /api/v1/users/admin/{userId}:
     get:
       operationId: AdminGetUser
@@ -287,6 +309,8 @@ paths:
           type: string
       tags:
       - Users
+      summary: Admin get user
+      x-summary-source: derived
   /api/v1/users/auth/deleteAuth:
     delete:
       operationId: DeleteAuth
@@ -302,39 +326,66 @@ paths:
       parameters: []
       tags:
       - Users
+      summary: Delete auth
+      x-summary-source: derived
 components:
   schemas:
-    ApiResponse:
+    OrganizationSettings:
       properties:
-        isValid:
+        simulationEnabled:
           type: boolean
-        error:
+        secureLinkDisabled:
+          type: boolean
+        simulations:
           properties:
-            validationErrors:
-              items:
-                $ref: '#/components/schemas/ApiValidationError'
-              type: array
-            message:
-              type: string
+            totalClustersPerBatch:
+              type: number
+              format: double
+            totalBatches:
+              type: number
+              format: double
           required:
-          - validationErrors
-          - message
+          - totalClustersPerBatch
+          - totalBatches
           type: object
-        data:
-          additionalProperties: true
+        monitoring:
+          properties:
+            enabled:
+              type: boolean
+              enum:
+              - false
+          required:
+          - enabled
           type: object
       required:
-      - isValid
+      - simulationEnabled
+      - secureLinkDisabled
+      - simulations
+      - monitoring
       type: object
       additionalProperties: true
-    Record_string.string_:
-      properties: {}
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
       type: object
-      description: Construct a type with a set of properties K of type T
-    VersionCounts:
-      properties: {}
-      additionalProperties:
-        $ref: '#/components/schemas/Version'
+      additionalProperties: true
+    Version:
+      properties:
+        count:
+          type: number
+          format: double
+        label:
+          type: string
+      required:
+      - count
+      - label
       type: object
     User:
       properties:
@@ -387,6 +438,90 @@ components:
       - inviteToken
       - inviteIssued
       - providerId
+      type: object
+      additionalProperties: true
+    VersionCounts:
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
+      type: object
+    Organization:
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        clusterSecretKey:
+          type: string
+        settings:
+          $ref: '#/components/schemas/OrganizationSettings'
+        stats:
+          $ref: '#/components/schemas/OrgnizationStats'
+        salesforce:
+          properties:
+            syncError:
+              type:
+              - string
+              - 'null'
+            syncStatus:
+              type: string
+              enum:
+              - syncing
+              - idle
+              - error
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - syncError
+          - syncStatus
+          - name
+          - id
+          type: object
+        deletedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - _id
+      - name
+      - clusterSecretKey
+      - settings
+      - stats
+      - salesforce
+      - deletedAt
+      - createdAt
+      type: object
+      additionalProperties: true
+    OrgnizationStats:
+      properties:
+        online:
+          type: number
+          format: double
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
+      required:
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
       type: object
       additionalProperties: true
     AdminUserDetailResult:
@@ -452,108 +587,6 @@ components:
       - organizations
       type: object
       additionalProperties: true
-    ApiValidationError:
-      properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
-          type: string
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: true
-    Organization:
-      properties:
-        _id:
-          type: string
-        name:
-          type: string
-        clusterSecretKey:
-          type: string
-        settings:
-          $ref: '#/components/schemas/OrganizationSettings'
-        stats:
-          $ref: '#/components/schemas/OrgnizationStats'
-        salesforce:
-          properties:
-            syncError:
-              type:
-              - string
-              - 'null'
-            syncStatus:
-              type: string
-              enum:
-              - syncing
-              - idle
-              - error
-            name:
-              type: string
-            id:
-              type: string
-          required:
-          - syncError
-          - syncStatus
-          - name
-          - id
-          type: object
-        deletedAt:
-          type: string
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
-      required:
-      - _id
-      - name
-      - clusterSecretKey
-      - settings
-      - stats
-      - salesforce
-      - deletedAt
-      - createdAt
-      type: object
-      additionalProperties: true
-    Version:
-      properties:
-        count:
-          type: number
-          format: double
-        label:
-          type: string
-      required:
-      - count
-      - label
-      type: object
-    OrgnizationStats:
-      properties:
-        online:
-          type: number
-          format: double
-        offline:
-          type: number
-          format: double
-        total:
-          type: number
-          format: double
-        health:
-          additionalProperties: true
-          type: object
-        conditions:
-          additionalProperties: true
-          type: object
-        versions:
-          $ref: '#/components/schemas/VersionCounts'
-      required:
-      - online
-      - offline
-      - total
-      - health
-      - conditions
-      - versions
-      type: object
-      additionalProperties: true
     AdminUserListResult:
       properties:
         userId:
@@ -587,38 +620,31 @@ components:
       - inviteIssued
       type: object
       additionalProperties: true
-    OrganizationSettings:
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    ApiResponse:
       properties:
-        simulationEnabled:
+        isValid:
           type: boolean
-        secureLinkDisabled:
-          type: boolean
-        simulations:
+        error:
           properties:
-            totalClustersPerBatch:
-              type: number
-              format: double
-            totalBatches:
-              type: number
-              format: double
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
           required:
-          - totalClustersPerBatch
-          - totalBatches
+          - validationErrors
+          - message
           type: object
-        monitoring:
-          properties:
-            enabled:
-              type: boolean
-              enum:
-              - false
-          required:
-          - enabled
+        data:
+          additionalProperties: true
           type: object
       required:
-      - simulationEnabled
-      - secureLinkDisabled
-      - simulations
-      - monitoring
+      - isValid
       type: object
       additionalProperties: true
   securitySchemes:

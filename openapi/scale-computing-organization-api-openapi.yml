@@ -43,6 +43,8 @@ paths:
               type: object
       tags:
       - Organization
+      summary: Invite organization user
+      x-summary-source: derived
   /api/v1/organization/reinvite-user:
     post:
       operationId: ReinviteOrganizationUser
@@ -76,6 +78,8 @@ paths:
               type: object
       tags:
       - Organization
+      summary: Reinvite organization user
+      x-summary-source: derived
 components:
   securitySchemes:
     tsoa_auth:

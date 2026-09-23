@@ -38,6 +38,8 @@ paths:
               type: object
       tags:
       - Nodes
+      summary: Create node
+      x-summary-source: derived
     get:
       operationId: GetNodes
       responses:
@@ -65,6 +67,8 @@ paths:
           type: string
       tags:
       - Nodes
+      summary: Get nodes
+      x-summary-source: derived
   /api/v1/nodes/asset:
     post:
       operationId: CreateNodeAsset
@@ -93,6 +97,8 @@ paths:
               $ref: '#/components/schemas/NodeAssetPayload'
       tags:
       - Nodes
+      summary: Create node asset
+      x-summary-source: derived
   /api/v1/nodes/{nodeId}:
     get:
       operationId: GetNode
@@ -114,6 +120,8 @@ paths:
           type: string
       tags:
       - Nodes
+      summary: Get node
+      x-summary-source: derived
     patch:
       operationId: UpdateNode
       responses:
@@ -168,6 +176,8 @@ paths:
               type: object
       tags:
       - Nodes
+      summary: Update node
+      x-summary-source: derived
   /api/v1/nodes/sync:
     post:
       operationId: SyncNodesToFleet
@@ -198,6 +208,8 @@ paths:
       parameters: []
       tags:
       - Nodes
+      summary: Sync nodes to fleet
+      x-summary-source: derived
   /api/v1/nodes/certificate:
     post:
       operationId: RequestClientCertificate
@@ -229,29 +241,252 @@ paths:
               type: object
       tags:
       - Nodes
+      summary: Request client certificate
+      x-summary-source: derived
 components:
   schemas:
-    ApiResponse:
+    ApiValidationError:
       properties:
-        isValid:
-          type: boolean
-        error:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: true
+    NodeData:
+      properties:
+        ping:
           properties:
-            validationErrors:
-              items:
-                $ref: '#/components/schemas/ApiValidationError'
-              type: array
-            message:
+            interval:
+              type: number
+              format: double
+          required:
+          - interval
+          type: object
+        registration:
+          properties:
+            secretKey:
               type: string
           required:
-          - validationErrors
-          - message
+          - secretKey
           type: object
-        data:
-          additionalProperties: true
+        cluster:
+          properties:
+            uuid:
+              type: string
+          required:
+          - uuid
           type: object
+        hcOSIdentifier:
+          type: string
+        firmware:
+          type: string
+        macAddress:
+          type: string
+        manufacturer:
+          type: string
+        model:
+          type: string
+        serialNumber:
+          type: string
+        identifier:
+          type: string
+      type: object
+    NodeAssetPayload:
+      properties:
+        asset:
+          properties:
+            softwareSerialNumber:
+              type: string
+            shipDate:
+              type: string
+            model:
+              type: string
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - softwareSerialNumber
+          - shipDate
+          - model
+          - name
+          - id
+          type: object
+        serialNumber:
+          type: string
+        organizationId:
+          type: string
       required:
-      - isValid
+      - asset
+      - serialNumber
+      - organizationId
+      type: object
+    Error:
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        stack:
+          type: string
+      required:
+      - name
+      - message
+      type: object
+      additionalProperties: true
+    ZeroTouchStatusCollectorData:
+      properties:
+        state:
+          items:
+            properties:
+              clusterinitialized:
+                type: number
+                enum:
+                - 0
+                - 1
+              allnodesincluster:
+                type: number
+                enum:
+                - 0
+                - 1
+              isinitializingnode:
+                type: number
+                enum:
+                - 0
+                - 1
+              allnodesinitialized:
+                type: number
+                enum:
+                - 0
+                - 1
+              nodeinitcomplete:
+                type: number
+                enum:
+                - 0
+                - 1
+              preexecoverride:
+                type: number
+                enum:
+                - 0
+                - 1
+            required:
+            - clusterinitialized
+            - allnodesincluster
+            - isinitializingnode
+            - allnodesinitialized
+            - nodeinitcomplete
+            - preexecoverride
+            type: object
+          type: array
+        clusterinit:
+          properties:
+            progress:
+              type: string
+            lastFailure:
+              type: string
+            lastAction:
+              type: string
+            message:
+              type: string
+            status:
+              type: string
+            isLeader:
+              type: boolean
+              enum:
+              - true
+          required:
+          - progress
+          - lastFailure
+          - lastAction
+          - message
+          - status
+          - isLeader
+          type: object
+        nodeinit:
+          properties:
+            backplaneIP:
+              type: string
+            initializingNode:
+              type: string
+            progress:
+              type: string
+            lastFailure:
+              type: string
+            lastAction:
+              type: string
+            message:
+              type: string
+            status:
+              type: string
+          required:
+          - backplaneIP
+          - initializingNode
+          - progress
+          - lastFailure
+          - lastAction
+          - message
+          - status
+          type: object
+        nodeStates:
+          items:
+            properties:
+              pinged:
+                type: string
+              nodeInitialized:
+                type: string
+              identifier:
+                type: string
+            required:
+            - pinged
+            - nodeInitialized
+            - identifier
+            type: object
+          type: array
+        sczerotouchIteration:
+          type: number
+          format: double
+      required:
+      - state
+      - clusterinit
+      - nodeinit
+      - nodeStates
+      - sczerotouchIteration
+      type: object
+      additionalProperties: true
+    SecretKeyCollectorData:
+      properties:
+        secretKey:
+          type: string
+      required:
+      - secretKey
+      type: object
+      additionalProperties: true
+    HardwareCollectorData:
+      properties:
+        identifier:
+          type: string
+        serialNumber:
+          type: string
+        model:
+          type: string
+        manufacturer:
+          type: string
+        macAddress:
+          type: string
+        firmware:
+          type: string
+      required:
+      - identifier
+      - serialNumber
+      - model
+      - manufacturer
+      - macAddress
+      - firmware
       type: object
       additionalProperties: true
     Record_string.string_:
@@ -265,19 +500,6 @@ components:
           format: double
       required:
       - interval
-      type: object
-      additionalProperties: true
-    Error:
-      properties:
-        name:
-          type: string
-        message:
-          type: string
-        stack:
-          type: string
-      required:
-      - name
-      - message
       type: object
       additionalProperties: true
     INode:
@@ -442,235 +664,27 @@ components:
       - isDuplicateSerialNumber
       type: object
       additionalProperties: true
-    ApiValidationError:
+    ApiResponse:
       properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
-          type: string
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: true
-    HardwareCollectorData:
-      properties:
-        identifier:
-          type: string
-        serialNumber:
-          type: string
-        model:
-          type: string
-        manufacturer:
-          type: string
-        macAddress:
-          type: string
-        firmware:
-          type: string
-      required:
-      - identifier
-      - serialNumber
-      - model
-      - manufacturer
-      - macAddress
-      - firmware
-      type: object
-      additionalProperties: true
-    NodeAssetPayload:
-      properties:
-        asset:
+        isValid:
+          type: boolean
+        error:
           properties:
-            softwareSerialNumber:
-              type: string
-            shipDate:
-              type: string
-            model:
-              type: string
-            name:
-              type: string
-            id:
-              type: string
-          required:
-          - softwareSerialNumber
-          - shipDate
-          - model
-          - name
-          - id
-          type: object
-        serialNumber:
-          type: string
-        organizationId:
-          type: string
-      required:
-      - asset
-      - serialNumber
-      - organizationId
-      type: object
-    NodeData:
-      properties:
-        ping:
-          properties:
-            interval:
-              type: number
-              format: double
-          required:
-          - interval
-          type: object
-        registration:
-          properties:
-            secretKey:
-              type: string
-          required:
-          - secretKey
-          type: object
-        cluster:
-          properties:
-            uuid:
-              type: string
-          required:
-          - uuid
-          type: object
-        hcOSIdentifier:
-          type: string
-        firmware:
-          type: string
-        macAddress:
-          type: string
-        manufacturer:
-          type: string
-        model:
-          type: string
-        serialNumber:
-          type: string
-        identifier:
-          type: string
-      type: object
-    ZeroTouchStatusCollectorData:
-      properties:
-        state:
-          items:
-            properties:
-              clusterinitialized:
-                type: number
-                enum:
-                - 0
-                - 1
-              allnodesincluster:
-                type: number
-                enum:
-                - 0
-                - 1
-              isinitializingnode:
-                type: number
-                enum:
-                - 0
-                - 1
-              allnodesinitialized:
-                type: number
-                enum:
-                - 0
-                - 1
-              nodeinitcomplete:
-                type: number
-                enum:
-                - 0
-                - 1
-              preexecoverride:
-                type: number
-                enum:
-                - 0
-                - 1
-            required:
-            - clusterinitialized
-            - allnodesincluster
-            - isinitializingnode
-            - allnodesinitialized
-            - nodeinitcomplete
-            - preexecoverride
-            type: object
-          type: array
-        clusterinit:
-          properties:
-            progress:
-              type: string
-            lastFailure:
-              type: string
-            lastAction:
-              type: string
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
             message:
               type: string
-            status:
-              type: string
-            isLeader:
-              type: boolean
-              enum:
-              - true
           required:
-          - progress
-          - lastFailure
-          - lastAction
+          - validationErrors
           - message
-          - status
-          - isLeader
           type: object
-        nodeinit:
-          properties:
-            backplaneIP:
-              type: string
-            initializingNode:
-              type: string
-            progress:
-              type: string
-            lastFailure:
-              type: string
-            lastAction:
-              type: string
-            message:
-              type: string
-            status:
-              type: string
-          required:
-          - backplaneIP
-          - initializingNode
-          - progress
-          - lastFailure
-          - lastAction
-          - message
-          - status
+        data:
+          additionalProperties: true
           type: object
-        nodeStates:
-          items:
-            properties:
-              pinged:
-                type: string
-              nodeInitialized:
-                type: string
-              identifier:
-                type: string
-            required:
-            - pinged
-            - nodeInitialized
-            - identifier
-            type: object
-          type: array
-        sczerotouchIteration:
-          type: number
-          format: double
       required:
-      - state
-      - clusterinit
-      - nodeinit
-      - nodeStates
-      - sczerotouchIteration
-      type: object
-      additionalProperties: true
-    SecretKeyCollectorData:
-      properties:
-        secretKey:
-          type: string
-      required:
-      - secretKey
+      - isValid
       type: object
       additionalProperties: true
   securitySchemes:

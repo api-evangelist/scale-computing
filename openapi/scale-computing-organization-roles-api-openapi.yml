@@ -8,7 +8,7 @@ info:
 servers:
 - url: /
 tags:
-- name: OrganizationRoles
+- name: Organization Roles
 paths:
   /api/v1/organizationRoles:
     post:
@@ -44,7 +44,9 @@ paths:
               - name
               type: object
       tags:
-      - OrganizationRoles
+      - Organization Roles
+      summary: Create organization role
+      x-summary-source: derived
     get:
       operationId: GetOrganizationRoles
       responses:
@@ -61,7 +63,9 @@ paths:
         - organizationRole:read:*
       parameters: []
       tags:
-      - OrganizationRoles
+      - Organization Roles
+      summary: Get organization roles
+      x-summary-source: derived
     delete:
       operationId: DeleteOrganizationRole
       responses:
@@ -87,7 +91,9 @@ paths:
               - roleId
               type: object
       tags:
-      - OrganizationRoles
+      - Organization Roles
+      summary: Delete organization role
+      x-summary-source: derived
   /api/v1/organizationRoles/{roleId}:
     get:
       operationId: GetOrganizationRole
@@ -108,7 +114,9 @@ paths:
         schema:
           type: string
       tags:
-      - OrganizationRoles
+      - Organization Roles
+      summary: Get organization role
+      x-summary-source: derived
     put:
       operationId: UpdateOrganizationRole
       responses:
@@ -147,7 +155,9 @@ paths:
               - name
               type: object
       tags:
-      - OrganizationRoles
+      - Organization Roles
+      summary: Update organization role
+      x-summary-source: derived
 components:
   schemas:
     OrganizationRole:

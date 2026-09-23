@@ -36,6 +36,8 @@ paths:
       parameters: []
       tags:
       - OrganizationUser
+      summary: Get organization user
+      x-summary-source: derived
 components:
   securitySchemes:
     tsoa_auth:

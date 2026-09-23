@@ -31,6 +31,8 @@ paths:
           type: string
       tags:
       - Staged Clusters
+      summary: Get staged cluster
+      x-summary-source: derived
     delete:
       operationId: RemoveStagedCluster
       responses:
@@ -51,6 +53,8 @@ paths:
           type: string
       tags:
       - Staged Clusters
+      summary: Remove staged cluster
+      x-summary-source: derived
   /api/v1/staged-clusters:
     get:
       operationId: GetStagedClusters
@@ -67,6 +71,8 @@ paths:
       parameters: []
       tags:
       - Staged Clusters
+      summary: Get staged clusters
+      x-summary-source: derived
     post:
       operationId: CreateStagedCluster
       responses:
@@ -88,6 +94,8 @@ paths:
               $ref: '#/components/schemas/StagedClusterCreateParams'
       tags:
       - Staged Clusters
+      summary: Create staged cluster
+      x-summary-source: derived
   /api/v1/staged-clusters/{id}/update:
     post:
       operationId: UpdateStagedCluster
@@ -115,6 +123,8 @@ paths:
               $ref: '#/components/schemas/StagedClusterCreateParams'
       tags:
       - Staged Clusters
+      summary: Update staged cluster
+      x-summary-source: derived
   /api/v1/staged-clusters/{id}/resend-config:
     post:
       operationId: ResendClusterConfig
@@ -136,31 +146,14 @@ paths:
           type: string
       tags:
       - Staged Clusters
+      summary: Resend cluster config
+      x-summary-source: derived
 components:
   schemas:
-    ApiResponse:
-      properties:
-        isValid:
-          type: boolean
-        error:
-          properties:
-            validationErrors:
-              items:
-                $ref: '#/components/schemas/ApiValidationError'
-              type: array
-            message:
-              type: string
-          required:
-          - validationErrors
-          - message
-          type: object
-        data:
-          additionalProperties: true
-          type: object
-      required:
-      - isValid
+    Record_string.string_:
+      properties: {}
       type: object
-      additionalProperties: true
+      description: Construct a type with a set of properties K of type T
     StagedClusterCreateParams:
       properties:
         clusterName:
@@ -223,10 +216,6 @@ components:
       - nodes
       type: object
       additionalProperties: true
-    Record_string.string_:
-      properties: {}
-      type: object
-      description: Construct a type with a set of properties K of type T
     ApiValidationError:
       properties:
         params:
@@ -237,6 +226,29 @@ components:
           type: string
       required:
       - message
+      type: object
+      additionalProperties: true
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
       type: object
       additionalProperties: true
   securitySchemes:

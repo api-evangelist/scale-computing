@@ -40,8 +40,55 @@ paths:
               type: object
       tags:
       - Organization Salesforce Account
+      summary: Update organization salesforce account
+      x-summary-source: derived
 components:
   schemas:
+    OrganizationSettings:
+      properties:
+        simulationEnabled:
+          type: boolean
+        secureLinkDisabled:
+          type: boolean
+        simulations:
+          properties:
+            totalClustersPerBatch:
+              type: number
+              format: double
+            totalBatches:
+              type: number
+              format: double
+          required:
+          - totalClustersPerBatch
+          - totalBatches
+          type: object
+        monitoring:
+          properties:
+            enabled:
+              type: boolean
+              enum:
+              - false
+          required:
+          - enabled
+          type: object
+      required:
+      - simulationEnabled
+      - secureLinkDisabled
+      - simulations
+      - monitoring
+      type: object
+      additionalProperties: true
+    Version:
+      properties:
+        count:
+          type: number
+          format: double
+        label:
+          type: string
+      required:
+      - count
+      - label
+      type: object
     VersionCounts:
       properties: {}
       additionalProperties:
@@ -98,17 +145,6 @@ components:
       - createdAt
       type: object
       additionalProperties: true
-    Version:
-      properties:
-        count:
-          type: number
-          format: double
-        label:
-          type: string
-      required:
-      - count
-      - label
-      type: object
     OrgnizationStats:
       properties:
         online:
@@ -135,40 +171,6 @@ components:
       - health
       - conditions
       - versions
-      type: object
-      additionalProperties: true
-    OrganizationSettings:
-      properties:
-        simulationEnabled:
-          type: boolean
-        secureLinkDisabled:
-          type: boolean
-        simulations:
-          properties:
-            totalClustersPerBatch:
-              type: number
-              format: double
-            totalBatches:
-              type: number
-              format: double
-          required:
-          - totalClustersPerBatch
-          - totalBatches
-          type: object
-        monitoring:
-          properties:
-            enabled:
-              type: boolean
-              enum:
-              - false
-          required:
-          - enabled
-          type: object
-      required:
-      - simulationEnabled
-      - secureLinkDisabled
-      - simulations
-      - monitoring
       type: object
       additionalProperties: true
   securitySchemes:

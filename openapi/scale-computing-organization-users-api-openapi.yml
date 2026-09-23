@@ -8,7 +8,7 @@ info:
 servers:
 - url: /
 tags:
-- name: OrganizationUsers
+- name: Organization Users
 paths:
   /api/v1/organizationUsers:
     get:
@@ -27,7 +27,9 @@ paths:
         - organizationUser:read:*
       parameters: []
       tags:
-      - OrganizationUsers
+      - Organization Users
+      summary: Get organization users
+      x-summary-source: derived
     put:
       operationId: UpdateOrganizationUser
       responses:
@@ -55,7 +57,9 @@ paths:
               - userId
               type: object
       tags:
-      - OrganizationUsers
+      - Organization Users
+      summary: Update organization user
+      x-summary-source: derived
     delete:
       operationId: RemoveOrganizationUser
       responses:
@@ -77,7 +81,9 @@ paths:
               - userId
               type: object
       tags:
-      - OrganizationUsers
+      - Organization Users
+      summary: Remove organization user
+      x-summary-source: derived
 components:
   schemas:
     User:
