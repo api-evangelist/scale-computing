@@ -93,6 +93,20 @@ paths:
       - Conditions
 components:
   schemas:
+    BadRequestException:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
+      required:
+      - statusCode
+      - message
+      - error
     ClusterConditionDto:
       type: object
       properties:
@@ -222,20 +236,6 @@ components:
       required:
       - meta
       - items
-    BadRequestException:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
-      required:
-      - statusCode
-      - message
-      - error
   securitySchemes:
     API_Key:
       type: apiKey

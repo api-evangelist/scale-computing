@@ -24,7 +24,7 @@
     "scale-computing-vms-api-openapi.yml"
   ],
   "archived": [
-    "deleted 3 superseded output(s) from the previous generation"
+    "deleted 2 superseded output(s) from the previous generation"
   ],
   "errors": [
     "scale-computing-fleet-manager-openapi.json: dangling $ref: #/components/schemas/"
@@ -102,8 +102,8 @@
     "scale-computing-core-openapi.json: declared missing tag: Users",
     "scale-computing-fleet-manager-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0; renamed 1 component key(s) illegal in 3.x (e.g. API Key)",
     "tag 'Clusters' spans 2 source specs (scale-computing-core-openapi.json, scale-computing-fleet-manager-openapi.json): per-path servers applied",
-    "superseded outputs removed: scale-computing-organization-roles-api-openapi.yml, scale-computing-organization-users-api-openapi.yml, scale-computing-v-ms-api-openapi.yml",
-    "apis.yml register: written (+3 apis, 18 total)"
+    "superseded outputs removed: scale-computing-organization-roles-api-openapi.yml, scale-computing-organization-users-api-openapi.yml",
+    "apis.yml register: written (+2 apis, 18 total)"
   ],
   "skipped": [
     "_original/scale-computing-swagger-original.json: archived document superseded by a larger archived document",
@@ -124,6 +124,6 @@
     "scale-computing-salesforce-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "scale-computing-staged-clusters-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "scale-computing-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "scale-computing-v-ms-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+    "scale-computing-vms-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

@@ -178,16 +178,38 @@ components:
       - monitoring
       type: object
       additionalProperties: true
-    Version:
+    OrgnizationStats:
       properties:
-        count:
+        online:
           type: number
           format: double
-        label:
-          type: string
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
       required:
-      - count
-      - label
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
+      type: object
+      additionalProperties: true
+    VersionCounts:
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
       type: object
     OrganizationCreationParams:
       properties:
@@ -203,10 +225,16 @@ components:
       required:
       - name
       type: object
-    VersionCounts:
-      properties: {}
-      additionalProperties:
-        $ref: '#/components/schemas/Version'
+    Version:
+      properties:
+        count:
+          type: number
+          format: double
+        label:
+          type: string
+      required:
+      - count
+      - label
       type: object
     Organization:
       properties:
@@ -257,34 +285,6 @@ components:
       - salesforce
       - deletedAt
       - createdAt
-      type: object
-      additionalProperties: true
-    OrgnizationStats:
-      properties:
-        online:
-          type: number
-          format: double
-        offline:
-          type: number
-          format: double
-        total:
-          type: number
-          format: double
-        health:
-          additionalProperties: true
-          type: object
-        conditions:
-          additionalProperties: true
-          type: object
-        versions:
-          $ref: '#/components/schemas/VersionCounts'
-      required:
-      - online
-      - offline
-      - total
-      - health
-      - conditions
-      - versions
       type: object
       additionalProperties: true
   securitySchemes:

@@ -144,31 +144,20 @@ paths:
       - Metrics
 components:
   schemas:
-    PageDto:
+    BadRequestException:
       type: object
       properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
       required:
-      - meta
-      - items
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
+      - statusCode
+      - message
+      - error
     QueryResponseDto:
       type: object
       properties:
@@ -203,20 +192,31 @@ components:
       - pointData
       - fields
       - label
-    BadRequestException:
+    PageMetaDto:
       type: object
       properties:
-        statusCode:
+        offset:
           type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
+        limit:
+          type: number
+        total:
+          type: number
       required:
-      - statusCode
-      - message
-      - error
+      - offset
+      - limit
+      - total
+    PageDto:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
+      required:
+      - meta
+      - items
   securitySchemes:
     API_Key:
       type: apiKey

@@ -156,33 +156,6 @@ components:
       - statusCode
       - message
       - error
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
-    CreateApiKeyDto:
-      type: object
-      properties:
-        name:
-          type: string
-        role:
-          type: string
-        isSystemToken:
-          type: object
-          default: false
-      required:
-      - name
-      - role
-      - isSystemToken
     ApiKeyDto:
       type: object
       properties:
@@ -237,6 +210,33 @@ components:
       required:
       - meta
       - items
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
+    CreateApiKeyDto:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        isSystemToken:
+          type: object
+          default: false
+      required:
+      - name
+      - role
+      - isSystemToken
   securitySchemes:
     API_Key:
       type: apiKey

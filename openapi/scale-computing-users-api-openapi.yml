@@ -330,6 +330,39 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    AdminUserListResult:
+      properties:
+        userId:
+          type: string
+        email:
+          type: string
+        providerId:
+          type:
+          - string
+          - 'null'
+        scaleAdminRole:
+          type:
+          - string
+          - 'null'
+        verifiedOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        inviteIssued:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - userId
+      - email
+      - providerId
+      - scaleAdminRole
+      - verifiedOn
+      - inviteIssued
+      type: object
+      additionalProperties: true
     OrganizationSettings:
       properties:
         simulationEnabled:
@@ -364,29 +397,66 @@ components:
       - monitoring
       type: object
       additionalProperties: true
-    ApiValidationError:
+    OrgnizationStats:
       properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
-          type: string
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: true
-    Version:
-      properties:
-        count:
+        online:
           type: number
           format: double
-        label:
-          type: string
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
       required:
-      - count
-      - label
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
       type: object
+      additionalProperties: true
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    VersionCounts:
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
+      type: object
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
     User:
       properties:
         _id:
@@ -440,90 +510,17 @@ components:
       - providerId
       type: object
       additionalProperties: true
-    VersionCounts:
-      properties: {}
-      additionalProperties:
-        $ref: '#/components/schemas/Version'
-      type: object
-    Organization:
+    Version:
       properties:
-        _id:
+        count:
+          type: number
+          format: double
+        label:
           type: string
-        name:
-          type: string
-        clusterSecretKey:
-          type: string
-        settings:
-          $ref: '#/components/schemas/OrganizationSettings'
-        stats:
-          $ref: '#/components/schemas/OrgnizationStats'
-        salesforce:
-          properties:
-            syncError:
-              type:
-              - string
-              - 'null'
-            syncStatus:
-              type: string
-              enum:
-              - syncing
-              - idle
-              - error
-            name:
-              type: string
-            id:
-              type: string
-          required:
-          - syncError
-          - syncStatus
-          - name
-          - id
-          type: object
-        deletedAt:
-          type: string
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
       required:
-      - _id
-      - name
-      - clusterSecretKey
-      - settings
-      - stats
-      - salesforce
-      - deletedAt
-      - createdAt
+      - count
+      - label
       type: object
-      additionalProperties: true
-    OrgnizationStats:
-      properties:
-        online:
-          type: number
-          format: double
-        offline:
-          type: number
-          format: double
-        total:
-          type: number
-          format: double
-        health:
-          additionalProperties: true
-          type: object
-        conditions:
-          additionalProperties: true
-          type: object
-        versions:
-          $ref: '#/components/schemas/VersionCounts'
-      required:
-      - online
-      - offline
-      - total
-      - health
-      - conditions
-      - versions
-      type: object
-      additionalProperties: true
     AdminUserDetailResult:
       properties:
         userId:
@@ -587,64 +584,67 @@ components:
       - organizations
       type: object
       additionalProperties: true
-    AdminUserListResult:
+    Organization:
       properties:
-        userId:
+        _id:
           type: string
-        email:
+        name:
           type: string
-        providerId:
-          type:
-          - string
-          - 'null'
-        scaleAdminRole:
-          type:
-          - string
-          - 'null'
-        verifiedOn:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        inviteIssued:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      required:
-      - userId
-      - email
-      - providerId
-      - scaleAdminRole
-      - verifiedOn
-      - inviteIssued
-      type: object
-      additionalProperties: true
-    Record_string.string_:
-      properties: {}
-      type: object
-      description: Construct a type with a set of properties K of type T
-    ApiResponse:
-      properties:
-        isValid:
-          type: boolean
-        error:
+        clusterSecretKey:
+          type: string
+        settings:
+          $ref: '#/components/schemas/OrganizationSettings'
+        stats:
+          $ref: '#/components/schemas/OrgnizationStats'
+        salesforce:
           properties:
-            validationErrors:
-              items:
-                $ref: '#/components/schemas/ApiValidationError'
-              type: array
-            message:
+            syncError:
+              type:
+              - string
+              - 'null'
+            syncStatus:
+              type: string
+              enum:
+              - syncing
+              - idle
+              - error
+            name:
+              type: string
+            id:
               type: string
           required:
-          - validationErrors
-          - message
+          - syncError
+          - syncStatus
+          - name
+          - id
           type: object
-        data:
-          additionalProperties: true
-          type: object
+        deletedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
       required:
-      - isValid
+      - _id
+      - name
+      - clusterSecretKey
+      - settings
+      - stats
+      - salesforce
+      - deletedAt
+      - createdAt
+      type: object
+      additionalProperties: true
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
       type: object
       additionalProperties: true
   securitySchemes:

@@ -78,6 +78,39 @@ components:
       - monitoring
       type: object
       additionalProperties: true
+    OrgnizationStats:
+      properties:
+        online:
+          type: number
+          format: double
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
+      required:
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
+      type: object
+      additionalProperties: true
+    VersionCounts:
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
+      type: object
     Version:
       properties:
         count:
@@ -88,11 +121,6 @@ components:
       required:
       - count
       - label
-      type: object
-    VersionCounts:
-      properties: {}
-      additionalProperties:
-        $ref: '#/components/schemas/Version'
       type: object
     Organization:
       properties:
@@ -143,34 +171,6 @@ components:
       - salesforce
       - deletedAt
       - createdAt
-      type: object
-      additionalProperties: true
-    OrgnizationStats:
-      properties:
-        online:
-          type: number
-          format: double
-        offline:
-          type: number
-          format: double
-        total:
-          type: number
-          format: double
-        health:
-          additionalProperties: true
-          type: object
-        conditions:
-          additionalProperties: true
-          type: object
-        versions:
-          $ref: '#/components/schemas/VersionCounts'
-      required:
-      - online
-      - offline
-      - total
-      - health
-      - conditions
-      - versions
       type: object
       additionalProperties: true
   securitySchemes:

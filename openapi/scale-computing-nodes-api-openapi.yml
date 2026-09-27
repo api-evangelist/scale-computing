@@ -245,100 +245,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ApiValidationError:
-      properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
-          type: string
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: true
-    NodeData:
-      properties:
-        ping:
-          properties:
-            interval:
-              type: number
-              format: double
-          required:
-          - interval
-          type: object
-        registration:
-          properties:
-            secretKey:
-              type: string
-          required:
-          - secretKey
-          type: object
-        cluster:
-          properties:
-            uuid:
-              type: string
-          required:
-          - uuid
-          type: object
-        hcOSIdentifier:
-          type: string
-        firmware:
-          type: string
-        macAddress:
-          type: string
-        manufacturer:
-          type: string
-        model:
-          type: string
-        serialNumber:
-          type: string
-        identifier:
-          type: string
-      type: object
-    NodeAssetPayload:
-      properties:
-        asset:
-          properties:
-            softwareSerialNumber:
-              type: string
-            shipDate:
-              type: string
-            model:
-              type: string
-            name:
-              type: string
-            id:
-              type: string
-          required:
-          - softwareSerialNumber
-          - shipDate
-          - model
-          - name
-          - id
-          type: object
-        serialNumber:
-          type: string
-        organizationId:
-          type: string
-      required:
-      - asset
-      - serialNumber
-      - organizationId
-      type: object
-    Error:
-      properties:
-        name:
-          type: string
-        message:
-          type: string
-        stack:
-          type: string
-      required:
-      - name
-      - message
-      type: object
-      additionalProperties: true
     ZeroTouchStatusCollectorData:
       properties:
         state:
@@ -458,41 +364,6 @@ components:
       - sczerotouchIteration
       type: object
       additionalProperties: true
-    SecretKeyCollectorData:
-      properties:
-        secretKey:
-          type: string
-      required:
-      - secretKey
-      type: object
-      additionalProperties: true
-    HardwareCollectorData:
-      properties:
-        identifier:
-          type: string
-        serialNumber:
-          type: string
-        model:
-          type: string
-        manufacturer:
-          type: string
-        macAddress:
-          type: string
-        firmware:
-          type: string
-      required:
-      - identifier
-      - serialNumber
-      - model
-      - manufacturer
-      - macAddress
-      - firmware
-      type: object
-      additionalProperties: true
-    Record_string.string_:
-      properties: {}
-      type: object
-      description: Construct a type with a set of properties K of type T
     PingCollectorData:
       properties:
         interval:
@@ -664,6 +535,10 @@ components:
       - isDuplicateSerialNumber
       type: object
       additionalProperties: true
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
     ApiResponse:
       properties:
         isValid:
@@ -685,6 +560,131 @@ components:
           type: object
       required:
       - isValid
+      type: object
+      additionalProperties: true
+    NodeData:
+      properties:
+        ping:
+          properties:
+            interval:
+              type: number
+              format: double
+          required:
+          - interval
+          type: object
+        registration:
+          properties:
+            secretKey:
+              type: string
+          required:
+          - secretKey
+          type: object
+        cluster:
+          properties:
+            uuid:
+              type: string
+          required:
+          - uuid
+          type: object
+        hcOSIdentifier:
+          type: string
+        firmware:
+          type: string
+        macAddress:
+          type: string
+        manufacturer:
+          type: string
+        model:
+          type: string
+        serialNumber:
+          type: string
+        identifier:
+          type: string
+      type: object
+    Error:
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        stack:
+          type: string
+      required:
+      - name
+      - message
+      type: object
+      additionalProperties: true
+    NodeAssetPayload:
+      properties:
+        asset:
+          properties:
+            softwareSerialNumber:
+              type: string
+            shipDate:
+              type: string
+            model:
+              type: string
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - softwareSerialNumber
+          - shipDate
+          - model
+          - name
+          - id
+          type: object
+        serialNumber:
+          type: string
+        organizationId:
+          type: string
+      required:
+      - asset
+      - serialNumber
+      - organizationId
+      type: object
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: true
+    HardwareCollectorData:
+      properties:
+        identifier:
+          type: string
+        serialNumber:
+          type: string
+        model:
+          type: string
+        manufacturer:
+          type: string
+        macAddress:
+          type: string
+        firmware:
+          type: string
+      required:
+      - identifier
+      - serialNumber
+      - model
+      - manufacturer
+      - macAddress
+      - firmware
+      type: object
+      additionalProperties: true
+    SecretKeyCollectorData:
+      properties:
+        secretKey:
+          type: string
+      required:
+      - secretKey
       type: object
       additionalProperties: true
   securitySchemes:

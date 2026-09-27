@@ -430,114 +430,39 @@ paths:
       description: Fleet Manager API
 components:
   schemas:
-    ApiValidationError:
+    ClusterDataAvailableUpdate:
       properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
-          type: string
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: true
-    ClusterUpdateStatus:
-      properties:
-        failNotes:
-          type: string
-        toBuild:
-          type:
-          - number
-          - 'null'
-          format: double
-        toVersion:
-          type:
-          - string
-          - 'null'
-        percent:
+        timestamp:
           type: number
           format: double
-        message:
+        revision:
+          type: number
+          format: double
+        minorVersion:
+          type: number
+          format: double
+        majorVersion:
+          type: number
+          format: double
+        buildID:
+          type: number
+          format: double
+        changelog:
           type: string
-        state:
-          type: string
-        isUpdating:
-          type: boolean
-      required:
-      - percent
-      - message
-      - state
-      - isUpdating
-      type: object
-    Cluster:
-      properties:
-        _id:
+        description:
           type: string
         uuid:
           type: string
-        name:
-          type: string
-        leaderNode:
-          type: string
-        leaderNodeLanIp:
-          type: string
-        organizationId:
-          type: string
-        enabled:
-          type: boolean
-        isSimulated:
-          type: boolean
-        simulationBatchId:
-          type: string
-        onlineStatus:
-          $ref: '#/components/schemas/OnlineStatus'
-        health:
-          $ref: '#/components/schemas/ClusterHeatlh'
-        tags:
-          items:
-            type: string
-          type: array
-        data:
-          $ref: '#/components/schemas/Partial_ClusterData_'
-        collectors:
-          properties: {}
-          type: object
-        lastCheckin:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        createdAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        deletedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
       required:
-      - _id
+      - timestamp
+      - revision
+      - minorVersion
+      - majorVersion
+      - buildID
+      - changelog
+      - description
       - uuid
-      - leaderNode
-      - organizationId
-      - enabled
-      - isSimulated
-      - simulationBatchId
-      - onlineStatus
-      - health
-      - tags
-      - collectors
-      - createdAt
-      - deletedAt
       type: object
-      additionalProperties: true
-    Record_string.string_:
-      properties: {}
-      type: object
-      description: Construct a type with a set of properties K of type T
     ClusterHeatlh:
       properties:
         score:
@@ -780,43 +705,15 @@ components:
           type: object
       type: object
       description: Make all properties in T optional
-    ClusterDataAvailableUpdate:
-      properties:
-        timestamp:
-          type: number
-          format: double
-        revision:
-          type: number
-          format: double
-        minorVersion:
-          type: number
-          format: double
-        majorVersion:
-          type: number
-          format: double
-        buildID:
-          type: number
-          format: double
-        changelog:
-          type: string
-        description:
-          type: string
-        uuid:
-          type: string
-      required:
-      - timestamp
-      - revision
-      - minorVersion
-      - majorVersion
-      - buildID
-      - changelog
-      - description
-      - uuid
-      type: object
-    OnlineStatus:
+    HealthState:
       enum:
-      - online
-      - offline
+      - healthy
+      - disconnected
+      - connecting
+      - critical
+      - warning
+      - notice
+      - info
       type: string
     AdditionalRouteArgs:
       properties:
@@ -828,6 +725,78 @@ components:
       - query
       - path
       type: object
+    Boolean:
+      properties: {}
+      type: object
+      additionalProperties: true
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    Cluster:
+      properties:
+        _id:
+          type: string
+        uuid:
+          type: string
+        name:
+          type: string
+        leaderNode:
+          type: string
+        leaderNodeLanIp:
+          type: string
+        organizationId:
+          type: string
+        enabled:
+          type: boolean
+        isSimulated:
+          type: boolean
+        simulationBatchId:
+          type: string
+        onlineStatus:
+          $ref: '#/components/schemas/OnlineStatus'
+        health:
+          $ref: '#/components/schemas/ClusterHeatlh'
+        tags:
+          items:
+            type: string
+          type: array
+        data:
+          $ref: '#/components/schemas/Partial_ClusterData_'
+        collectors:
+          properties: {}
+          type: object
+        lastCheckin:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        createdAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        deletedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - _id
+      - uuid
+      - leaderNode
+      - organizationId
+      - enabled
+      - isSimulated
+      - simulationBatchId
+      - onlineStatus
+      - health
+      - tags
+      - collectors
+      - createdAt
+      - deletedAt
+      type: object
+      additionalProperties: true
     ApiResponse:
       properties:
         isValid:
@@ -851,20 +820,90 @@ components:
       - isValid
       type: object
       additionalProperties: true
-    Boolean:
-      properties: {}
+    ClusterUpdateStatus:
+      properties:
+        failNotes:
+          type: string
+        toBuild:
+          type:
+          - number
+          - 'null'
+          format: double
+        toVersion:
+          type:
+          - string
+          - 'null'
+        percent:
+          type: number
+          format: double
+        message:
+          type: string
+        state:
+          type: string
+        isUpdating:
+          type: boolean
+      required:
+      - percent
+      - message
+      - state
+      - isUpdating
+      type: object
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
       type: object
       additionalProperties: true
-    HealthState:
+    OnlineStatus:
       enum:
-      - healthy
-      - disconnected
-      - connecting
-      - critical
-      - warning
-      - notice
-      - info
+      - online
+      - offline
       type: string
+    BadRequestException:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
+      required:
+      - statusCode
+      - message
+      - error
+    PageDto:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
+      required:
+      - meta
+      - items
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
     UpdateStatusDto:
       type: object
       properties:
@@ -905,6 +944,50 @@ components:
       - state
       - message
       - percent
+    UpdatesAvailableOptionDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: The unique identifier of the update option
+          example: 9.4.23.216736
+        description:
+          type: string
+          description: Description of the update
+          example: release 9.4.23.216736
+        changeLog:
+          type: string
+          description: Change log for the update
+          example: release 9.4.23.216736 - <a href="https://example.com">link</a>
+        buildID:
+          type: number
+          description: Build ID of the update
+          example: 216736
+        majorVersion:
+          type: number
+          description: Major version number
+          example: 9
+        minorVersion:
+          type: number
+          description: Minor version number
+          example: 4
+        revision:
+          type: number
+          description: Revision number
+          example: 23
+        timestamp:
+          type: number
+          description: Timestamp of the update
+          example: 1734552304
+      required:
+      - uuid
+      - description
+      - changeLog
+      - buildID
+      - majorVersion
+      - minorVersion
+      - revision
+      - timestamp
     ClusterDto:
       type: object
       properties:
@@ -1026,89 +1109,6 @@ components:
       - name
       - createdAt
       - updatedAt
-    UpdatesAvailableOptionDto:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: The unique identifier of the update option
-          example: 9.4.23.216736
-        description:
-          type: string
-          description: Description of the update
-          example: release 9.4.23.216736
-        changeLog:
-          type: string
-          description: Change log for the update
-          example: release 9.4.23.216736 - <a href="https://example.com">link</a>
-        buildID:
-          type: number
-          description: Build ID of the update
-          example: 216736
-        majorVersion:
-          type: number
-          description: Major version number
-          example: 9
-        minorVersion:
-          type: number
-          description: Minor version number
-          example: 4
-        revision:
-          type: number
-          description: Revision number
-          example: 23
-        timestamp:
-          type: number
-          description: Timestamp of the update
-          example: 1734552304
-      required:
-      - uuid
-      - description
-      - changeLog
-      - buildID
-      - majorVersion
-      - minorVersion
-      - revision
-      - timestamp
-    BadRequestException:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
-      required:
-      - statusCode
-      - message
-      - error
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
-    PageDto:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
-      required:
-      - meta
-      - items
   securitySchemes:
     tsoa_auth:
       type: oauth2

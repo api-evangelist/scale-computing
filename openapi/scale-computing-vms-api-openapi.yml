@@ -124,18 +124,20 @@ paths:
       - VMs
 components:
   schemas:
-    PageDto:
+    BadRequestException:
       type: object
       properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
       required:
-      - meta
-      - items
+      - statusCode
+      - message
+      - error
     PageMetaDto:
       type: object
       properties:
@@ -250,20 +252,18 @@ components:
       - snapSize
       - createdAt
       - updatedAt
-    BadRequestException:
+    PageDto:
       type: object
       properties:
-        statusCode:
-          type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
       required:
-      - statusCode
-      - message
-      - error
+      - meta
+      - items
   securitySchemes:
     API_Key:
       type: apiKey
