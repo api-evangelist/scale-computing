@@ -330,6 +330,29 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
     AdminUserListResult:
       properties:
         userId:
@@ -361,6 +384,51 @@ components:
       - scaleAdminRole
       - verifiedOn
       - inviteIssued
+      type: object
+      additionalProperties: true
+    OrgnizationStats:
+      properties:
+        online:
+          type: number
+          format: double
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
+      required:
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
+      type: object
+      additionalProperties: true
+    VersionCounts:
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
+      type: object
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
       type: object
       additionalProperties: true
     OrganizationSettings:
@@ -395,66 +463,6 @@ components:
       - secureLinkDisabled
       - simulations
       - monitoring
-      type: object
-      additionalProperties: true
-    OrgnizationStats:
-      properties:
-        online:
-          type: number
-          format: double
-        offline:
-          type: number
-          format: double
-        total:
-          type: number
-          format: double
-        health:
-          additionalProperties: true
-          type: object
-        conditions:
-          additionalProperties: true
-          type: object
-        versions:
-          $ref: '#/components/schemas/VersionCounts'
-      required:
-      - online
-      - offline
-      - total
-      - health
-      - conditions
-      - versions
-      type: object
-      additionalProperties: true
-    Record_string.string_:
-      properties: {}
-      type: object
-      description: Construct a type with a set of properties K of type T
-    VersionCounts:
-      properties: {}
-      additionalProperties:
-        $ref: '#/components/schemas/Version'
-      type: object
-    ApiResponse:
-      properties:
-        isValid:
-          type: boolean
-        error:
-          properties:
-            validationErrors:
-              items:
-                $ref: '#/components/schemas/ApiValidationError'
-              type: array
-            message:
-              type: string
-          required:
-          - validationErrors
-          - message
-          type: object
-        data:
-          additionalProperties: true
-          type: object
-      required:
-      - isValid
       type: object
       additionalProperties: true
     User:
@@ -510,6 +518,10 @@ components:
       - providerId
       type: object
       additionalProperties: true
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
     Version:
       properties:
         count:
@@ -633,18 +645,6 @@ components:
       - salesforce
       - deletedAt
       - createdAt
-      type: object
-      additionalProperties: true
-    ApiValidationError:
-      properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
-          type: string
-        message:
-          type: string
-      required:
-      - message
       type: object
       additionalProperties: true
   securitySchemes:

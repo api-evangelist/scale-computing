@@ -93,6 +93,31 @@ paths:
       - Conditions
 components:
   schemas:
+    PageDto:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
+      required:
+      - meta
+      - items
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
     BadRequestException:
       type: object
       properties:
@@ -211,31 +236,6 @@ components:
       - nodeLANIPs
       - createdAt
       - updatedAt
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
-    PageDto:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
-      required:
-      - meta
-      - items
   securitySchemes:
     API_Key:
       type: apiKey

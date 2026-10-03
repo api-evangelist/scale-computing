@@ -66,20 +66,18 @@ paths:
       - organization-activities
 components:
   schemas:
-    BadRequestException:
+    PageDto:
       type: object
       properties:
-        statusCode:
-          type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
       required:
-      - statusCode
-      - message
-      - error
+      - meta
+      - items
     OrganizationActivityDto:
       type: object
       properties:
@@ -140,18 +138,20 @@ components:
       - offset
       - limit
       - total
-    PageDto:
+    BadRequestException:
       type: object
       properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
       required:
-      - meta
-      - items
+      - statusCode
+      - message
+      - error
   securitySchemes:
     API_Key:
       type: apiKey

@@ -430,50 +430,6 @@ paths:
       description: Fleet Manager API
 components:
   schemas:
-    ClusterDataAvailableUpdate:
-      properties:
-        timestamp:
-          type: number
-          format: double
-        revision:
-          type: number
-          format: double
-        minorVersion:
-          type: number
-          format: double
-        majorVersion:
-          type: number
-          format: double
-        buildID:
-          type: number
-          format: double
-        changelog:
-          type: string
-        description:
-          type: string
-        uuid:
-          type: string
-      required:
-      - timestamp
-      - revision
-      - minorVersion
-      - majorVersion
-      - buildID
-      - changelog
-      - description
-      - uuid
-      type: object
-    ClusterHeatlh:
-      properties:
-        score:
-          type: number
-          format: double
-        state:
-          $ref: '#/components/schemas/HealthState'
-      required:
-      - score
-      - state
-      type: object
     Partial_ClusterData_:
       properties:
         uuid:
@@ -705,34 +661,15 @@ components:
           type: object
       type: object
       description: Make all properties in T optional
-    HealthState:
-      enum:
-      - healthy
-      - disconnected
-      - connecting
-      - critical
-      - warning
-      - notice
-      - info
-      type: string
-    AdditionalRouteArgs:
-      properties:
-        query:
-          $ref: '#/components/schemas/Record_string.string_'
-        path:
-          type: string
-      required:
-      - query
-      - path
-      type: object
     Boolean:
       properties: {}
       type: object
       additionalProperties: true
-    Record_string.string_:
-      properties: {}
-      type: object
-      description: Construct a type with a set of properties K of type T
+    OnlineStatus:
+      enum:
+      - online
+      - offline
+      type: string
     Cluster:
       properties:
         _id:
@@ -820,6 +757,86 @@ components:
       - isValid
       type: object
       additionalProperties: true
+    ApiValidationError:
+      properties:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: true
+    AdditionalRouteArgs:
+      properties:
+        query:
+          $ref: '#/components/schemas/Record_string.string_'
+        path:
+          type: string
+      required:
+      - query
+      - path
+      type: object
+    HealthState:
+      enum:
+      - healthy
+      - disconnected
+      - connecting
+      - critical
+      - warning
+      - notice
+      - info
+      type: string
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    ClusterHeatlh:
+      properties:
+        score:
+          type: number
+          format: double
+        state:
+          $ref: '#/components/schemas/HealthState'
+      required:
+      - score
+      - state
+      type: object
+    ClusterDataAvailableUpdate:
+      properties:
+        timestamp:
+          type: number
+          format: double
+        revision:
+          type: number
+          format: double
+        minorVersion:
+          type: number
+          format: double
+        majorVersion:
+          type: number
+          format: double
+        buildID:
+          type: number
+          format: double
+        changelog:
+          type: string
+        description:
+          type: string
+        uuid:
+          type: string
+      required:
+      - timestamp
+      - revision
+      - minorVersion
+      - majorVersion
+      - buildID
+      - changelog
+      - description
+      - uuid
+      type: object
     ClusterUpdateStatus:
       properties:
         failNotes:
@@ -848,49 +865,6 @@ components:
       - state
       - isUpdating
       type: object
-    ApiValidationError:
-      properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
-          type: string
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: true
-    OnlineStatus:
-      enum:
-      - online
-      - offline
-      type: string
-    BadRequestException:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
-      required:
-      - statusCode
-      - message
-      - error
-    PageDto:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
-      required:
-      - meta
-      - items
     PageMetaDto:
       type: object
       properties:
@@ -904,46 +878,18 @@ components:
       - offset
       - limit
       - total
-    UpdateStatusDto:
+    PageDto:
       type: object
       properties:
-        isUpdating:
-          type: boolean
-          description: Whether the system is updating
-          example: false
-        state:
-          type: string
-          description: The current state of the update process
-          example: COMPLETE
-        message:
-          type: string
-          description: Message related to the update process
-          example: ''
-        percent:
-          type: number
-          description: Percentage of completion
-          example: 0
-        toVersion:
-          type:
-          - string
-          - 'null'
-          description: Version the cluster is updating to
-          example: 9.4.18.218440
-        toBuild:
-          type:
-          - number
-          - 'null'
-          description: Build the cluster is updating to
-          example: 218440
-        failNotes:
-          type: string
-          description: Node-provided guidance on what must be fixed before retrying a failed update
-          example: ''
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
       required:
-      - isUpdating
-      - state
-      - message
-      - percent
+      - meta
+      - items
     UpdatesAvailableOptionDto:
       type: object
       properties:
@@ -1109,6 +1055,60 @@ components:
       - name
       - createdAt
       - updatedAt
+    BadRequestException:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
+      required:
+      - statusCode
+      - message
+      - error
+    UpdateStatusDto:
+      type: object
+      properties:
+        isUpdating:
+          type: boolean
+          description: Whether the system is updating
+          example: false
+        state:
+          type: string
+          description: The current state of the update process
+          example: COMPLETE
+        message:
+          type: string
+          description: Message related to the update process
+          example: ''
+        percent:
+          type: number
+          description: Percentage of completion
+          example: 0
+        toVersion:
+          type:
+          - string
+          - 'null'
+          description: Version the cluster is updating to
+          example: 9.4.18.218440
+        toBuild:
+          type:
+          - number
+          - 'null'
+          description: Build the cluster is updating to
+          example: 218440
+        failNotes:
+          type: string
+          description: Node-provided guidance on what must be fixed before retrying a failed update
+          example: ''
+      required:
+      - isUpdating
+      - state
+      - message
+      - percent
   securitySchemes:
     tsoa_auth:
       type: oauth2

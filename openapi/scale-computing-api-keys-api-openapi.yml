@@ -142,20 +142,45 @@ paths:
       - API Keys
 components:
   schemas:
-    BadRequestException:
+    PageMetaDto:
       type: object
       properties:
-        statusCode:
+        offset:
           type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
+        limit:
+          type: number
+        total:
+          type: number
       required:
-      - statusCode
-      - message
-      - error
+      - offset
+      - limit
+      - total
+    PageDto:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
+      required:
+      - meta
+      - items
+    CreateApiKeyDto:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        isSystemToken:
+          type: object
+          default: false
+      required:
+      - name
+      - role
+      - isSystemToken
     ApiKeyDto:
       type: object
       properties:
@@ -198,45 +223,20 @@ components:
       - tokenSuffix
       - role
       - createdAt
-    PageDto:
+    BadRequestException:
       type: object
       properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
-      required:
-      - meta
-      - items
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
+        statusCode:
           type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
-    CreateApiKeyDto:
-      type: object
-      properties:
-        name:
+          default: 400
+        message:
           type: string
-        role:
+        error:
           type: string
-        isSystemToken:
-          type: object
-          default: false
       required:
-      - name
-      - role
-      - isSystemToken
+      - statusCode
+      - message
+      - error
   securitySchemes:
     API_Key:
       type: apiKey

@@ -124,6 +124,31 @@ paths:
       - VMs
 components:
   schemas:
+    PageDto:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
+      required:
+      - meta
+      - items
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
     BadRequestException:
       type: object
       properties:
@@ -138,19 +163,6 @@ components:
       - statusCode
       - message
       - error
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
     VmDto:
       type: object
       properties:
@@ -252,18 +264,6 @@ components:
       - snapSize
       - createdAt
       - updatedAt
-    PageDto:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
-      required:
-      - meta
-      - items
   securitySchemes:
     API_Key:
       type: apiKey
