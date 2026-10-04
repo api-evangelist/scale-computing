@@ -142,19 +142,6 @@ paths:
       - API Keys
 components:
   schemas:
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
     PageDto:
       type: object
       properties:
@@ -223,6 +210,19 @@ components:
       - tokenSuffix
       - role
       - createdAt
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
     BadRequestException:
       type: object
       properties:

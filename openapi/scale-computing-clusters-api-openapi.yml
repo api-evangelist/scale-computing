@@ -430,6 +430,157 @@ paths:
       description: Fleet Manager API
 components:
   schemas:
+    ClusterUpdateStatus:
+      properties:
+        failNotes:
+          type: string
+        toBuild:
+          type:
+          - number
+          - 'null'
+          format: double
+        toVersion:
+          type:
+          - string
+          - 'null'
+        percent:
+          type: number
+          format: double
+        message:
+          type: string
+        state:
+          type: string
+        isUpdating:
+          type: boolean
+      required:
+      - percent
+      - message
+      - state
+      - isUpdating
+      type: object
+    Cluster:
+      properties:
+        _id:
+          type: string
+        uuid:
+          type: string
+        name:
+          type: string
+        leaderNode:
+          type: string
+        leaderNodeLanIp:
+          type: string
+        organizationId:
+          type: string
+        enabled:
+          type: boolean
+        isSimulated:
+          type: boolean
+        simulationBatchId:
+          type: string
+        onlineStatus:
+          $ref: '#/components/schemas/OnlineStatus'
+        health:
+          $ref: '#/components/schemas/ClusterHeatlh'
+        tags:
+          items:
+            type: string
+          type: array
+        data:
+          $ref: '#/components/schemas/Partial_ClusterData_'
+        collectors:
+          properties: {}
+          type: object
+        lastCheckin:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        createdAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        deletedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - _id
+      - uuid
+      - leaderNode
+      - organizationId
+      - enabled
+      - isSimulated
+      - simulationBatchId
+      - onlineStatus
+      - health
+      - tags
+      - collectors
+      - createdAt
+      - deletedAt
+      type: object
+      additionalProperties: true
+    ClusterDataAvailableUpdate:
+      properties:
+        timestamp:
+          type: number
+          format: double
+        revision:
+          type: number
+          format: double
+        minorVersion:
+          type: number
+          format: double
+        majorVersion:
+          type: number
+          format: double
+        buildID:
+          type: number
+          format: double
+        changelog:
+          type: string
+        description:
+          type: string
+        uuid:
+          type: string
+      required:
+      - timestamp
+      - revision
+      - minorVersion
+      - majorVersion
+      - buildID
+      - changelog
+      - description
+      - uuid
+      type: object
+    OnlineStatus:
+      enum:
+      - online
+      - offline
+      type: string
+    AdditionalRouteArgs:
+      properties:
+        query:
+          $ref: '#/components/schemas/Record_string.string_'
+        path:
+          type: string
+      required:
+      - query
+      - path
+      type: object
+    ClusterHeatlh:
+      properties:
+        score:
+          type: number
+          format: double
+        state:
+          $ref: '#/components/schemas/HealthState'
+      required:
+      - score
+      - state
+      type: object
     Partial_ClusterData_:
       properties:
         uuid:
@@ -661,79 +812,36 @@ components:
           type: object
       type: object
       description: Make all properties in T optional
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
     Boolean:
       properties: {}
       type: object
       additionalProperties: true
-    OnlineStatus:
-      enum:
-      - online
-      - offline
-      type: string
-    Cluster:
+    ApiValidationError:
       properties:
-        _id:
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
           type: string
-        uuid:
+        message:
           type: string
-        name:
-          type: string
-        leaderNode:
-          type: string
-        leaderNodeLanIp:
-          type: string
-        organizationId:
-          type: string
-        enabled:
-          type: boolean
-        isSimulated:
-          type: boolean
-        simulationBatchId:
-          type: string
-        onlineStatus:
-          $ref: '#/components/schemas/OnlineStatus'
-        health:
-          $ref: '#/components/schemas/ClusterHeatlh'
-        tags:
-          items:
-            type: string
-          type: array
-        data:
-          $ref: '#/components/schemas/Partial_ClusterData_'
-        collectors:
-          properties: {}
-          type: object
-        lastCheckin:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        createdAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        deletedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
       required:
-      - _id
-      - uuid
-      - leaderNode
-      - organizationId
-      - enabled
-      - isSimulated
-      - simulationBatchId
-      - onlineStatus
-      - health
-      - tags
-      - collectors
-      - createdAt
-      - deletedAt
+      - message
       type: object
       additionalProperties: true
+    HealthState:
+      enum:
+      - healthy
+      - disconnected
+      - connecting
+      - critical
+      - warning
+      - notice
+      - info
+      type: string
     ApiResponse:
       properties:
         isValid:
@@ -757,127 +865,46 @@ components:
       - isValid
       type: object
       additionalProperties: true
-    ApiValidationError:
+    UpdateStatusDto:
+      type: object
       properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
+        isUpdating:
+          type: boolean
+          description: Whether the system is updating
+          example: false
+        state:
           type: string
+          description: The current state of the update process
+          example: COMPLETE
         message:
           type: string
-      required:
-      - message
-      type: object
-      additionalProperties: true
-    AdditionalRouteArgs:
-      properties:
-        query:
-          $ref: '#/components/schemas/Record_string.string_'
-        path:
-          type: string
-      required:
-      - query
-      - path
-      type: object
-    HealthState:
-      enum:
-      - healthy
-      - disconnected
-      - connecting
-      - critical
-      - warning
-      - notice
-      - info
-      type: string
-    Record_string.string_:
-      properties: {}
-      type: object
-      description: Construct a type with a set of properties K of type T
-    ClusterHeatlh:
-      properties:
-        score:
+          description: Message related to the update process
+          example: ''
+        percent:
           type: number
-          format: double
-        state:
-          $ref: '#/components/schemas/HealthState'
-      required:
-      - score
-      - state
-      type: object
-    ClusterDataAvailableUpdate:
-      properties:
-        timestamp:
-          type: number
-          format: double
-        revision:
-          type: number
-          format: double
-        minorVersion:
-          type: number
-          format: double
-        majorVersion:
-          type: number
-          format: double
-        buildID:
-          type: number
-          format: double
-        changelog:
-          type: string
-        description:
-          type: string
-        uuid:
-          type: string
-      required:
-      - timestamp
-      - revision
-      - minorVersion
-      - majorVersion
-      - buildID
-      - changelog
-      - description
-      - uuid
-      type: object
-    ClusterUpdateStatus:
-      properties:
-        failNotes:
-          type: string
-        toBuild:
-          type:
-          - number
-          - 'null'
-          format: double
+          description: Percentage of completion
+          example: 0
         toVersion:
           type:
           - string
           - 'null'
-        percent:
-          type: number
-          format: double
-        message:
+          description: Version the cluster is updating to
+          example: 9.4.18.218440
+        toBuild:
+          type:
+          - number
+          - 'null'
+          description: Build the cluster is updating to
+          example: 218440
+        failNotes:
           type: string
-        state:
-          type: string
-        isUpdating:
-          type: boolean
+          description: Node-provided guidance on what must be fixed before retrying a failed update
+          example: ''
       required:
-      - percent
-      - message
-      - state
       - isUpdating
-      type: object
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
+      - state
+      - message
+      - percent
     PageDto:
       type: object
       properties:
@@ -934,6 +961,33 @@ components:
       - minorVersion
       - revision
       - timestamp
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
+    BadRequestException:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
+      required:
+      - statusCode
+      - message
+      - error
     ClusterDto:
       type: object
       properties:
@@ -1055,60 +1109,6 @@ components:
       - name
       - createdAt
       - updatedAt
-    BadRequestException:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
-      required:
-      - statusCode
-      - message
-      - error
-    UpdateStatusDto:
-      type: object
-      properties:
-        isUpdating:
-          type: boolean
-          description: Whether the system is updating
-          example: false
-        state:
-          type: string
-          description: The current state of the update process
-          example: COMPLETE
-        message:
-          type: string
-          description: Message related to the update process
-          example: ''
-        percent:
-          type: number
-          description: Percentage of completion
-          example: 0
-        toVersion:
-          type:
-          - string
-          - 'null'
-          description: Version the cluster is updating to
-          example: 9.4.18.218440
-        toBuild:
-          type:
-          - number
-          - 'null'
-          description: Build the cluster is updating to
-          example: 218440
-        failNotes:
-          type: string
-          description: Node-provided guidance on what must be fixed before retrying a failed update
-          example: ''
-      required:
-      - isUpdating
-      - state
-      - message
-      - percent
   securitySchemes:
     tsoa_auth:
       type: oauth2

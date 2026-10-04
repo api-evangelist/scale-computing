@@ -93,18 +93,6 @@ paths:
       - Conditions
 components:
   schemas:
-    PageDto:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
-      required:
-      - meta
-      - items
     PageMetaDto:
       type: object
       properties:
@@ -132,6 +120,18 @@ components:
       - statusCode
       - message
       - error
+    PageDto:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
+      required:
+      - meta
+      - items
     ClusterConditionDto:
       type: object
       properties:
