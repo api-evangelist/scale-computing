@@ -124,19 +124,6 @@ paths:
       - VMs
 components:
   schemas:
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
     BadRequestException:
       type: object
       properties:
@@ -151,6 +138,19 @@ components:
       - statusCode
       - message
       - error
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
     PageDto:
       type: object
       properties:

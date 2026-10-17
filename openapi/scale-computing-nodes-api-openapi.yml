@@ -245,45 +245,14 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    NodeData:
+    SecretKeyCollectorData:
       properties:
-        ping:
-          properties:
-            interval:
-              type: number
-              format: double
-          required:
-          - interval
-          type: object
-        registration:
-          properties:
-            secretKey:
-              type: string
-          required:
-          - secretKey
-          type: object
-        cluster:
-          properties:
-            uuid:
-              type: string
-          required:
-          - uuid
-          type: object
-        hcOSIdentifier:
+        secretKey:
           type: string
-        firmware:
-          type: string
-        macAddress:
-          type: string
-        manufacturer:
-          type: string
-        model:
-          type: string
-        serialNumber:
-          type: string
-        identifier:
-          type: string
+      required:
+      - secretKey
       type: object
+      additionalProperties: true
     ZeroTouchStatusCollectorData:
       properties:
         state:
@@ -426,13 +395,82 @@ components:
       - firmware
       type: object
       additionalProperties: true
-    PingCollectorData:
+    ApiValidationError:
       properties:
-        interval:
-          type: number
-          format: double
+        params:
+          $ref: '#/components/schemas/Record_string.string_'
+        instancePath:
+          type: string
+        message:
+          type: string
       required:
-      - interval
+      - message
+      type: object
+      additionalProperties: true
+    NodeAssetPayload:
+      properties:
+        asset:
+          properties:
+            softwareSerialNumber:
+              type: string
+            shipDate:
+              type: string
+            model:
+              type: string
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - softwareSerialNumber
+          - shipDate
+          - model
+          - name
+          - id
+          type: object
+        serialNumber:
+          type: string
+        organizationId:
+          type: string
+      required:
+      - asset
+      - serialNumber
+      - organizationId
+      type: object
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
+    Error:
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        stack:
+          type: string
+      required:
+      - name
+      - message
       type: object
       additionalProperties: true
     INode:
@@ -597,96 +635,58 @@ components:
       - isDuplicateSerialNumber
       type: object
       additionalProperties: true
-    Error:
+    NodeData:
       properties:
-        name:
-          type: string
-        message:
-          type: string
-        stack:
-          type: string
-      required:
-      - name
-      - message
-      type: object
-      additionalProperties: true
-    NodeAssetPayload:
-      properties:
-        asset:
+        ping:
           properties:
-            softwareSerialNumber:
-              type: string
-            shipDate:
-              type: string
-            model:
-              type: string
-            name:
-              type: string
-            id:
+            interval:
+              type: number
+              format: double
+          required:
+          - interval
+          type: object
+        registration:
+          properties:
+            secretKey:
               type: string
           required:
-          - softwareSerialNumber
-          - shipDate
-          - model
-          - name
-          - id
+          - secretKey
           type: object
+        cluster:
+          properties:
+            uuid:
+              type: string
+          required:
+          - uuid
+          type: object
+        hcOSIdentifier:
+          type: string
+        firmware:
+          type: string
+        macAddress:
+          type: string
+        manufacturer:
+          type: string
+        model:
+          type: string
         serialNumber:
           type: string
-        organizationId:
+        identifier:
           type: string
-      required:
-      - asset
-      - serialNumber
-      - organizationId
       type: object
+    PingCollectorData:
+      properties:
+        interval:
+          type: number
+          format: double
+      required:
+      - interval
+      type: object
+      additionalProperties: true
     Record_string.string_:
       properties: {}
       type: object
       description: Construct a type with a set of properties K of type T
-    SecretKeyCollectorData:
-      properties:
-        secretKey:
-          type: string
-      required:
-      - secretKey
-      type: object
-      additionalProperties: true
-    ApiValidationError:
-      properties:
-        params:
-          $ref: '#/components/schemas/Record_string.string_'
-        instancePath:
-          type: string
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: true
-    ApiResponse:
-      properties:
-        isValid:
-          type: boolean
-        error:
-          properties:
-            validationErrors:
-              items:
-                $ref: '#/components/schemas/ApiValidationError'
-              type: array
-            message:
-              type: string
-          required:
-          - validationErrors
-          - message
-          type: object
-        data:
-          additionalProperties: true
-          type: object
-      required:
-      - isValid
-      type: object
-      additionalProperties: true
   securitySchemes:
     tsoa_auth:
       type: oauth2

@@ -330,97 +330,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    AdminUserDetailResult:
-      properties:
-        userId:
-          type: string
-        email:
-          type: string
-        providerId:
-          type:
-          - string
-          - 'null'
-        scaleAdminRole:
-          type:
-          - string
-          - 'null'
-        verifiedOn:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        inviteIssued:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        organizations:
-          items:
-            properties:
-              lastAccess:
-                type:
-                - string
-                - 'null'
-                format: date-time
-              providerId:
-                type:
-                - string
-                - 'null'
-              roleName:
-                type: string
-              role:
-                type: string
-              name:
-                type: string
-              _id:
-                type: string
-            required:
-            - lastAccess
-            - providerId
-            - roleName
-            - role
-            - name
-            - _id
-            type: object
-          type: array
-      required:
-      - userId
-      - email
-      - providerId
-      - scaleAdminRole
-      - verifiedOn
-      - inviteIssued
-      - organizations
-      type: object
-      additionalProperties: true
-    OrgnizationStats:
-      properties:
-        online:
-          type: number
-          format: double
-        offline:
-          type: number
-          format: double
-        total:
-          type: number
-          format: double
-        health:
-          additionalProperties: true
-          type: object
-        conditions:
-          additionalProperties: true
-          type: object
-        versions:
-          $ref: '#/components/schemas/VersionCounts'
-      required:
-      - online
-      - offline
-      - total
-      - health
-      - conditions
-      - versions
-      type: object
-      additionalProperties: true
     AdminUserListResult:
       properties:
         userId:
@@ -507,6 +416,103 @@ components:
       - providerId
       type: object
       additionalProperties: true
+    Version:
+      properties:
+        count:
+          type: number
+          format: double
+        label:
+          type: string
+      required:
+      - count
+      - label
+      type: object
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
+    AdminUserDetailResult:
+      properties:
+        userId:
+          type: string
+        email:
+          type: string
+        providerId:
+          type:
+          - string
+          - 'null'
+        scaleAdminRole:
+          type:
+          - string
+          - 'null'
+        verifiedOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        inviteIssued:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        organizations:
+          items:
+            properties:
+              lastAccess:
+                type:
+                - string
+                - 'null'
+                format: date-time
+              providerId:
+                type:
+                - string
+                - 'null'
+              roleName:
+                type: string
+              role:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
+            required:
+            - lastAccess
+            - providerId
+            - roleName
+            - role
+            - name
+            - _id
+            type: object
+          type: array
+      required:
+      - userId
+      - email
+      - providerId
+      - scaleAdminRole
+      - verifiedOn
+      - inviteIssued
+      - organizations
+      type: object
+      additionalProperties: true
     Organization:
       properties:
         _id:
@@ -558,22 +564,6 @@ components:
       - createdAt
       type: object
       additionalProperties: true
-    VersionCounts:
-      properties: {}
-      additionalProperties:
-        $ref: '#/components/schemas/Version'
-      type: object
-    Version:
-      properties:
-        count:
-          type: number
-          format: double
-        label:
-          type: string
-      required:
-      - count
-      - label
-      type: object
     OrganizationSettings:
       properties:
         simulationEnabled:
@@ -608,10 +598,39 @@ components:
       - monitoring
       type: object
       additionalProperties: true
-    Record_string.string_:
+    VersionCounts:
       properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
       type: object
-      description: Construct a type with a set of properties K of type T
+    OrgnizationStats:
+      properties:
+        online:
+          type: number
+          format: double
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
+      required:
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
+      type: object
+      additionalProperties: true
     ApiValidationError:
       properties:
         params:
@@ -624,29 +643,10 @@ components:
       - message
       type: object
       additionalProperties: true
-    ApiResponse:
-      properties:
-        isValid:
-          type: boolean
-        error:
-          properties:
-            validationErrors:
-              items:
-                $ref: '#/components/schemas/ApiValidationError'
-              type: array
-            message:
-              type: string
-          required:
-          - validationErrors
-          - message
-          type: object
-        data:
-          additionalProperties: true
-          type: object
-      required:
-      - isValid
+    Record_string.string_:
+      properties: {}
       type: object
-      additionalProperties: true
+      description: Construct a type with a set of properties K of type T
   securitySchemes:
     tsoa_auth:
       type: oauth2

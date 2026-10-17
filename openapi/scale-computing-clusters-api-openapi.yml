@@ -430,34 +430,6 @@ paths:
       description: Fleet Manager API
 components:
   schemas:
-    ClusterUpdateStatus:
-      properties:
-        failNotes:
-          type: string
-        toBuild:
-          type:
-          - number
-          - 'null'
-          format: double
-        toVersion:
-          type:
-          - string
-          - 'null'
-        percent:
-          type: number
-          format: double
-        message:
-          type: string
-        state:
-          type: string
-        isUpdating:
-          type: boolean
-      required:
-      - percent
-      - message
-      - state
-      - isUpdating
-      type: object
     Cluster:
       properties:
         _id:
@@ -522,6 +494,45 @@ components:
       - deletedAt
       type: object
       additionalProperties: true
+    ClusterHeatlh:
+      properties:
+        score:
+          type: number
+          format: double
+        state:
+          $ref: '#/components/schemas/HealthState'
+      required:
+      - score
+      - state
+      type: object
+    ApiResponse:
+      properties:
+        isValid:
+          type: boolean
+        error:
+          properties:
+            validationErrors:
+              items:
+                $ref: '#/components/schemas/ApiValidationError'
+              type: array
+            message:
+              type: string
+          required:
+          - validationErrors
+          - message
+          type: object
+        data:
+          additionalProperties: true
+          type: object
+      required:
+      - isValid
+      type: object
+      additionalProperties: true
+    OnlineStatus:
+      enum:
+      - online
+      - offline
+      type: string
     ClusterDataAvailableUpdate:
       properties:
         timestamp:
@@ -555,11 +566,6 @@ components:
       - description
       - uuid
       type: object
-    OnlineStatus:
-      enum:
-      - online
-      - offline
-      type: string
     AdditionalRouteArgs:
       properties:
         query:
@@ -570,17 +576,20 @@ components:
       - query
       - path
       type: object
-    ClusterHeatlh:
-      properties:
-        score:
-          type: number
-          format: double
-        state:
-          $ref: '#/components/schemas/HealthState'
-      required:
-      - score
-      - state
+    Boolean:
+      properties: {}
       type: object
+      additionalProperties: true
+    HealthState:
+      enum:
+      - healthy
+      - disconnected
+      - connecting
+      - critical
+      - warning
+      - notice
+      - info
+      type: string
     Partial_ClusterData_:
       properties:
         uuid:
@@ -812,14 +821,34 @@ components:
           type: object
       type: object
       description: Make all properties in T optional
-    Record_string.string_:
-      properties: {}
+    ClusterUpdateStatus:
+      properties:
+        failNotes:
+          type: string
+        toBuild:
+          type:
+          - number
+          - 'null'
+          format: double
+        toVersion:
+          type:
+          - string
+          - 'null'
+        percent:
+          type: number
+          format: double
+        message:
+          type: string
+        state:
+          type: string
+        isUpdating:
+          type: boolean
+      required:
+      - percent
+      - message
+      - state
+      - isUpdating
       type: object
-      description: Construct a type with a set of properties K of type T
-    Boolean:
-      properties: {}
-      type: object
-      additionalProperties: true
     ApiValidationError:
       properties:
         params:
@@ -832,39 +861,10 @@ components:
       - message
       type: object
       additionalProperties: true
-    HealthState:
-      enum:
-      - healthy
-      - disconnected
-      - connecting
-      - critical
-      - warning
-      - notice
-      - info
-      type: string
-    ApiResponse:
-      properties:
-        isValid:
-          type: boolean
-        error:
-          properties:
-            validationErrors:
-              items:
-                $ref: '#/components/schemas/ApiValidationError'
-              type: array
-            message:
-              type: string
-          required:
-          - validationErrors
-          - message
-          type: object
-        data:
-          additionalProperties: true
-          type: object
-      required:
-      - isValid
+    Record_string.string_:
+      properties: {}
       type: object
-      additionalProperties: true
+      description: Construct a type with a set of properties K of type T
     UpdateStatusDto:
       type: object
       properties:
@@ -905,89 +905,6 @@ components:
       - state
       - message
       - percent
-    PageDto:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-        items:
-          type: array
-          items:
-            type: string
-      required:
-      - meta
-      - items
-    UpdatesAvailableOptionDto:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: The unique identifier of the update option
-          example: 9.4.23.216736
-        description:
-          type: string
-          description: Description of the update
-          example: release 9.4.23.216736
-        changeLog:
-          type: string
-          description: Change log for the update
-          example: release 9.4.23.216736 - <a href="https://example.com">link</a>
-        buildID:
-          type: number
-          description: Build ID of the update
-          example: 216736
-        majorVersion:
-          type: number
-          description: Major version number
-          example: 9
-        minorVersion:
-          type: number
-          description: Minor version number
-          example: 4
-        revision:
-          type: number
-          description: Revision number
-          example: 23
-        timestamp:
-          type: number
-          description: Timestamp of the update
-          example: 1734552304
-      required:
-      - uuid
-      - description
-      - changeLog
-      - buildID
-      - majorVersion
-      - minorVersion
-      - revision
-      - timestamp
-    PageMetaDto:
-      type: object
-      properties:
-        offset:
-          type: number
-        limit:
-          type: number
-        total:
-          type: number
-      required:
-      - offset
-      - limit
-      - total
-    BadRequestException:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          default: 400
-        message:
-          type: string
-        error:
-          type: string
-      required:
-      - statusCode
-      - message
-      - error
     ClusterDto:
       type: object
       properties:
@@ -1109,6 +1026,89 @@ components:
       - name
       - createdAt
       - updatedAt
+    BadRequestException:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          default: 400
+        message:
+          type: string
+        error:
+          type: string
+      required:
+      - statusCode
+      - message
+      - error
+    PageDto:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+        items:
+          type: array
+          items:
+            type: string
+      required:
+      - meta
+      - items
+    UpdatesAvailableOptionDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: The unique identifier of the update option
+          example: 9.4.23.216736
+        description:
+          type: string
+          description: Description of the update
+          example: release 9.4.23.216736
+        changeLog:
+          type: string
+          description: Change log for the update
+          example: release 9.4.23.216736 - <a href="https://example.com">link</a>
+        buildID:
+          type: number
+          description: Build ID of the update
+          example: 216736
+        majorVersion:
+          type: number
+          description: Major version number
+          example: 9
+        minorVersion:
+          type: number
+          description: Minor version number
+          example: 4
+        revision:
+          type: number
+          description: Revision number
+          example: 23
+        timestamp:
+          type: number
+          description: Timestamp of the update
+          example: 1734552304
+      required:
+      - uuid
+      - description
+      - changeLog
+      - buildID
+      - majorVersion
+      - minorVersion
+      - revision
+      - timestamp
+    PageMetaDto:
+      type: object
+      properties:
+        offset:
+          type: number
+        limit:
+          type: number
+        total:
+          type: number
+      required:
+      - offset
+      - limit
+      - total
   securitySchemes:
     tsoa_auth:
       type: oauth2

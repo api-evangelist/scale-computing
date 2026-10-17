@@ -144,34 +144,17 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    OrgnizationStats:
+    Version:
       properties:
-        online:
+        count:
           type: number
           format: double
-        offline:
-          type: number
-          format: double
-        total:
-          type: number
-          format: double
-        health:
-          additionalProperties: true
-          type: object
-        conditions:
-          additionalProperties: true
-          type: object
-        versions:
-          $ref: '#/components/schemas/VersionCounts'
+        label:
+          type: string
       required:
-      - online
-      - offline
-      - total
-      - health
-      - conditions
-      - versions
+      - count
+      - label
       type: object
-      additionalProperties: true
     OrganizationCreationParams:
       properties:
         settings:
@@ -186,56 +169,6 @@ components:
       required:
       - name
       type: object
-    VersionCounts:
-      properties: {}
-      additionalProperties:
-        $ref: '#/components/schemas/Version'
-      type: object
-    Version:
-      properties:
-        count:
-          type: number
-          format: double
-        label:
-          type: string
-      required:
-      - count
-      - label
-      type: object
-    OrganizationSettings:
-      properties:
-        simulationEnabled:
-          type: boolean
-        secureLinkDisabled:
-          type: boolean
-        simulations:
-          properties:
-            totalClustersPerBatch:
-              type: number
-              format: double
-            totalBatches:
-              type: number
-              format: double
-          required:
-          - totalClustersPerBatch
-          - totalBatches
-          type: object
-        monitoring:
-          properties:
-            enabled:
-              type: boolean
-              enum:
-              - false
-          required:
-          - enabled
-          type: object
-      required:
-      - simulationEnabled
-      - secureLinkDisabled
-      - simulations
-      - monitoring
-      type: object
-      additionalProperties: true
     Organization:
       properties:
         _id:
@@ -285,6 +218,73 @@ components:
       - salesforce
       - deletedAt
       - createdAt
+      type: object
+      additionalProperties: true
+    OrganizationSettings:
+      properties:
+        simulationEnabled:
+          type: boolean
+        secureLinkDisabled:
+          type: boolean
+        simulations:
+          properties:
+            totalClustersPerBatch:
+              type: number
+              format: double
+            totalBatches:
+              type: number
+              format: double
+          required:
+          - totalClustersPerBatch
+          - totalBatches
+          type: object
+        monitoring:
+          properties:
+            enabled:
+              type: boolean
+              enum:
+              - false
+          required:
+          - enabled
+          type: object
+      required:
+      - simulationEnabled
+      - secureLinkDisabled
+      - simulations
+      - monitoring
+      type: object
+      additionalProperties: true
+    VersionCounts:
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/Version'
+      type: object
+    OrgnizationStats:
+      properties:
+        online:
+          type: number
+          format: double
+        offline:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        health:
+          additionalProperties: true
+          type: object
+        conditions:
+          additionalProperties: true
+          type: object
+        versions:
+          $ref: '#/components/schemas/VersionCounts'
+      required:
+      - online
+      - offline
+      - total
+      - health
+      - conditions
+      - versions
       type: object
       additionalProperties: true
   securitySchemes:
