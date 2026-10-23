@@ -46,3 +46,9 @@ components:
         implicit:
           authorizationUrl: http://swagger.io/api/oauth/dialog
           scopes: {}
+x-provenance:
+  method: harvested
+  publisher: Scale Computing
+  source: https://api.scalecomputing.com/swagger.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
